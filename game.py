@@ -64,10 +64,7 @@ class car_game():
         self.win.blit(self.bg, (int(self.bgX), 0))  # draws our first bg image
         self.win.blit(self.bg, (int(self.bgX2), 0))  # draws the seconf bg image
 
-        # Redraw our car 
-        # win.blit(orange_car.car, (orange_car.x,orange_car.y))
-
-        # Redraw other cars
+        # Redraw all cars
         for sprite in self.all_sprites:
             self.win.blit(sprite.car,(int(sprite.x),int(sprite.y)))
         # pygame.sprite.spritecollide(orange_car, obst_list, True)
@@ -114,8 +111,9 @@ while game.run:
         if event.type == pygame.QUIT:
             game.run = False
 
-    keys = pygame.key.get_pressed()
 
+    # Move the orange car based on arrow keys
+    keys = pygame.key.get_pressed()
     game.orange_car.moveCar(keys,(game.canvas_width,game.canvas_height))
     
 

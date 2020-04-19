@@ -2,20 +2,24 @@ import math
 import numpy as np
 # import sympy
 import pygame
-pygame.init()
+# pygame.init()
 
-class car():
+class car(pygame.sprite.Sprite):
 	def __init__(self,x,y,car_type):
+		pygame.sprite.Sprite.__init__(self)
+		# super().__init__()
 		self.x=x # start position
 		self.y=y # start position
 		self.car_width=130 # total width of car (for bounding box)
 		self.car_height=70 # total height of car (for bounding box)
+
 
 		# self.wheel_radius
 
 		if car_type == "protagonist":
 			self.car = pygame.image.load('assets/orange_car.png')
 			self.stationary=False
+			self.vel=5
 
 
 		if car_type == "obstacle":
@@ -27,11 +31,14 @@ class car():
 			# car moves by itself
 			self.car = pygame.image.load('assets/green_car.png')
 			self.stationary=False
+			self.vel=7
 
 		self.car = pygame.transform.scale(self.car, (self.car_width, self.car_height))
+		self.rect = self.car.get_rect()
+        # self.rect.x = x
+        # self.rect.y = y
 
 		if not self.stationary:
-			self.vel=5
 			# Front wheel drive car utlizing Ackermann Steering
 			# http://ckw.phys.ncku.edu.tw/public/pub/Notes/GeneralPhysics/Powerpoint/Extra/05/11_0_0_Steering_Theroy.pdf
 			self.l=20 # length between front and rear wheel axes (wheelbase)
@@ -67,6 +74,13 @@ class car():
 
 		new_pos=(new_x,new_y,new_theta)
 		return new_pos
+
+
+		new_pos_list=[]
+		for x,y in range(0,1000):
+			a=(x-self.x)**2+(y-self.y)**2
+			if math.isclose(a,turnRadius**2,rel_tol=1e-1):
+				new_pos_list.append((x,y))
 
 
 

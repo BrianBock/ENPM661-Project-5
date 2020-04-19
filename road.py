@@ -3,3 +3,5 @@ class road():
 		self.lane_width
 		self.lane_count
 		self.road_length
+
+		vertical or horiztonal

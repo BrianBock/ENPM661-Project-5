@@ -1,24 +1,42 @@
 import math
 import numpy as np
-import sympy
+# import sympy
+import pygame
+pygame.init()
 
 class car():
-	def __init__(self,x,y,w,h):
-		self.startx=x # start position
-		self.starty=y # start position
-		self.car_width=w # total width of car (for bounding box)
-		self.car_length=h # total height of car (for bounding box)
+	def __init__(self,x,y,car_type):
+		self.x=x # start position
+		self.y=y # start position
+		self.car_width=130 # total width of car (for bounding box)
+		self.car_height=70 # total height of car (for bounding box)
 
-		self.wheel_radius
+		# self.wheel_radius
 
-		# Front wheel drive car utlizing Ackermann Steering
-		# http://ckw.phys.ncku.edu.tw/public/pub/Notes/GeneralPhysics/Powerpoint/Extra/05/11_0_0_Steering_Theroy.pdf
-		self.l=20 # length between front and rear wheel axes (wheelbase)
-		self.a2=self.l/2 # distance from the back axel to the center of mass of the car
-		self.stationary=True
+		if car_type == "protagonist":
+			self.car = pygame.image.load('assets/orange_car.png')
+			self.stationary=False
+
+
+		if car_type == "obstacle":
+			# car does not move
+			self.car = pygame.image.load('assets/blue_car.png')
+			self.stationary=True
+
+		if car_type == "dynamic":
+			# car moves by itself
+			self.car = pygame.image.load('assets/green_car.png')
+			self.stationary=False
+
+		self.car = pygame.transform.scale(self.car, (self.car_width, self.car_height))
 
 		if not self.stationary:
-			self.start_velocity
+			self.vel=5
+			# Front wheel drive car utlizing Ackermann Steering
+			# http://ckw.phys.ncku.edu.tw/public/pub/Notes/GeneralPhysics/Powerpoint/Extra/05/11_0_0_Steering_Theroy.pdf
+			self.l=20 # length between front and rear wheel axes (wheelbase)
+			self.a2=self.l/2 # distance from the back axel to the center of mass of the car
+
 
 
 	def turn(self,wheel_angle,direction,current_pos, current_vel, turn_time):

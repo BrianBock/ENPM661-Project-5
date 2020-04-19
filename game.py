@@ -16,7 +16,14 @@ bgX = 0
 bgX2 = bg.get_width()
 
 # Create our car
-orange_car=car(50,50,"protagonist")
+orange_car=car(10,10,"protagonist")
+
+# Create active cars
+active_list=[]
+for i in range (0,random.randint(1,3)):
+    randx=random.randint(100,900)
+    randy=random.randint(50,350)
+    active_list.append(car(randx,randy,"dynamic"))
 
 obst_list=[]
 
@@ -40,6 +47,9 @@ def redrawGameWindow():
     # Redraw other cars
     for obstacle in obst_list:
         win.blit(obstacle.car, (int(obstacle.x),int(obstacle.y)))
+
+    for active_car in active_list:
+        win.blit(active_car.car,(int(active_car.x),int(active_car.y)))
 
     pygame.display.update()
     

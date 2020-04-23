@@ -2,6 +2,8 @@
 import math
 import numpy as np
 import pygame
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Patch
 
 # Import our own functions
 from trigfunctions import*
@@ -11,29 +13,31 @@ class car(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         # super().__init__()
 
-        # Start position of sprite
-        self.spritex=x # start position
-        self.spritey=y # start position
+        # Start position of car origin
+        self.x=x # start position
+        self.y=y # start position
         self.theta=0
 
         # Car sprite dimensions
-        self.car_width=130 # total width of car (for bounding box)
-        self.car_height=70 # total height of car (for bounding box)
-        self.wheel_radius = 2
+        self.car_width_px=130 # total width of car (for bounding box)
+        self.car_height_px=70 # total height of car (for bounding box)
 
+        # Physical car dimensions (meters)
+        self.car_width = 5
+        self.car_height = 2
+        self.wheel_radius = .46
+        self.wheel_speed = 85 # rad/s
 
-        # Start position of the car origin
-        self.x=self.spritex+self.car_width//2
-        self.y=self.spritey+self.car_height//2
+        self.dt=.1 # seconds
 
-        self.wheel_speed=5
+        # Start position of the sprite origin
+        self.updateSpriteOrigin()
 
-        self.dt=1
 
         if car_type == "protagonist":
             self.car = pygame.image.load('assets/orange_car.png')
             self.stationary=False
-            self.vel=12
+            self.vel=27 #m/s
 
 
         if car_type == "obstacle":
@@ -47,7 +51,7 @@ class car(pygame.sprite.Sprite):
             self.stationary=False
             self.vel=7
 
-        self.car = pygame.transform.scale(self.car, (self.car_width, self.car_height))
+        self.car = pygame.transform.scale(self.car, (self.car_width_px, self.car_height_px))
         self.rect = self.car.get_rect()
         # self.rect.x = x
         # self.rect.y = y
@@ -59,9 +63,13 @@ class car(pygame.sprite.Sprite):
             self.a2=self.l/2 # distance from the back axel to the center of mass of the car
             self.W=self.car_height # distance between the left and right wheels
 
-    def switchCar2SpriteOrigin(self):
+    def updateSpriteOrigin(self):
         self.spritex=self.x-self.car_width//2
-        self.spritex=self.x-self.car_width//2
+        self.spritey=self.y-self.car_width//2
+
+    def updateCarOrigin(self):
+        self.x=self.spritex+self.car_width//2
+        self.y=self.spritey+self.car_height//2
 
 
     def rot_center(self,angle):
@@ -87,38 +95,43 @@ class car(pygame.sprite.Sprite):
         elif keys[pygame.K_UP] and self.spritey > self.vel:
             self.spritey-=self.vel
 
+
         elif keys[pygame.K_a]:
-            self.turnCar(15)
+            self.turnCar(2)
+        elif keys[pygame.K_s]:
+            self.turnCar(-2)
+
+        self.updateCarOrigin()
+        
+
+    # def turn(self,wheel_angle,direction,current_pos, current_vel, turn_time):
+    #     # Simplifying assumption: the front wheels must remain parallel to each other.
+    #     # There is therefore only one wheel angle and not two
+    #     l=self.l
+    #     a2=self.a2
+    #     x,y,theta=current_pos # world coordinates
+
+    #     forward_vel,angular_vel=current_vel # car velocity in car frame (+ angular_vel turning left)
+    #     # angular velocity should be zero when we start to turn
+    #     # car frame forward velocity remains constant while the car turns
+
+    #     if direction == "left":
+    #         turnRadius=math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
+    #         # wheel_angle=sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
+    #     elif direction == "right":
+    #         # wheel_angle=-sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
+    #         turnRadius=-math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
+
+    #     arcTraveled=forward_vel*turn_time
+    #     angleTraveled=np.rad2deg(arcTraveled/turnRadius) #s=0r
+
+    #     new_theta=theta+angleTraveled
+    #     new_x=-turnRadius*cosd(new_theta)
+    #     new_y=turnRadius*sind(new_theta)
 
 
-    def turn(self,wheel_angle,direction,current_pos, current_vel, turn_time):
-        # Simplifying assumption: the front wheels must remain parallel to each other.
-        # There is therefore only one wheel angle and not two
-        l=self.l
-        a2=self.a2
-        x,y,theta=current_pos # world coordinates
-
-        forward_vel,angular_vel=current_vel # car velocity in car frame (+ angular_vel turning left)
-        # angular velocity should be zero when we start to turn
-        # car frame forward velocity remains constant while the car turns
-
-        if direction == "left":
-            turnRadius=math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
-            # wheel_angle=sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
-        elif direction == "right":
-            # wheel_angle=-sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
-            turnRadius=-math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
-
-        arcTraveled=forward_vel*turn_time
-        angleTraveled=np.rad2deg(arcTraveled/turnRadius) #s=0r
-
-        new_theta=theta+angleTraveled
-        new_x=-turnRadius*cosd(new_theta)
-        new_y=turnRadius*sind(new_theta)
-
-
-        new_pos=(new_x,new_y,new_theta)
-        return new_pos
+    #     new_pos=(new_x,new_y,new_theta)
+    #     return new_pos
 
 
         # new_pos_list=[]
@@ -141,37 +154,86 @@ class car(pygame.sprite.Sprite):
 
     def turnCar(self,wheel_angle):
         R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
+        # if wheel_angle<0:
+        #     R*=-1
+        print("R="+str(R))
         alpha=math.asin(self.a2/R)
+        print("alpha="+str(alpha))
         R1=R*math.cos(alpha)
 
-        # Initial position of Center of Rotation in world frame (x,y)
-        COR_i=(-R1*cosd(self.theta)+self.x,-(R*math.sin(alpha))*sind(self.theta)+self.y)
+        # # Initial position of Center of Rotation in world frame (x,y)
+        # COR_i=(-R1*cosd(self.theta)+self.x,-(R*math.sin(alpha))*sind(self.theta)+self.y)
+        # print("COR_i="+str(COR_i))
 
-        # Final position of Center of Rotation in world frame (x,y)
-        COR_f=(COR_i[0]+self.vel*sind(self.theta)*self.dt,COR_i[1]+self.vel*cosd(self.theta)*self.dt)
+        # # Final position of Center of Rotation in world frame (x,y)
+        # COR_f=(COR_i[0]+self.vel*sind(self.theta)*self.dt,COR_i[1]+self.vel*cosd(self.theta)*self.dt)
+        # print("COR_f="+str(COR_f))
 
         ang_vel=self.wheel_radius*self.wheel_speed/(R1+self.W/2)
+        if wheel_angle<0:
+            ang_vel*=-1
+        print("ang vel="+str(ang_vel))
         dtheta=np.rad2deg(ang_vel*self.dt)
+        print("detheta="+str(dtheta))
 
-        B=(180-dtheta)/2-np.rad2deg(alpha)
+        B=(180-abs(dtheta))/2-np.rad2deg(alpha)
 
-        L=2*R*sind(dtheta/2)
+        L=abs(2*R*sind(abs(dtheta)/2))
+
         # Change in position of car in car frame (x,y)
         d_c=(L*sind(B), L*cosd(B))
+        print("dc="+str(d_c))
 
-
-        self.x=d_c[0]*cosd(self.theta)+COR_f[0]
-        self.y=d_c[1]*sind(self.theta)+COR_f[1]
+        self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt#+(COR_f[0]-COR_i[0])
+        self.y+=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt#+(COR_f[1]-COR_i[1])
 
         self.theta+=dtheta
 
-        self.switchCar2SpriteOrigin()
-        self.car,self.rect=self.rot_center(self.theta)
+        # self.theta=self.theta % 360
+
+        print(self.x,self.y,self.theta)
+        print("\n\n")
+
+        self.updateSpriteOrigin()
+        # self.car,self.rect=self.rot_center(self.theta)
+        # self.car=pygame.image.load('assets/orange_car/'+str(int(self.theta))+'.png')
+        # self.car = pygame.transform.scale(self.car, (self.car_width_px, self.car_height_px))
+        # self.rect = self.car.get_rect()
 
 
 
 
+if __name__ == '__main__':
+    test_car=car(50,0,"protagonist")
+    right_car=car(50,0,"protagonist")
+    a=Rectangle((test_car.x,test_car.y),test_car.car_width,test_car.car_height, angle=test_car.theta,alpha=.5)
+    # b=Rectangle((right_car.x,right_car.y),right_car.car_width,right_car.car_height, angle=right_car.theta,alpha=.5,color='purple')
 
+    fig, ax = plt.subplots(1)
+    ax.add_patch(a)
+    # ax.add_patch(b)
+
+
+    for i in range(10):
+        test_car.turnCar(15)
+        b=Rectangle((test_car.x,test_car.y),test_car.car_width,test_car.car_height, angle=test_car.theta,color="red",alpha=1)
+        ax.add_patch(b)
+
+    for i in range(20):
+        test_car.turnCar(-15)
+        b=Rectangle((test_car.x,test_car.y),test_car.car_width,test_car.car_height, angle=test_car.theta,color="green",alpha=1)
+        ax.add_patch(b)
+
+    for i in range(10):
+        test_car.turnCar(15)
+        b=Rectangle((test_car.x,test_car.y),test_car.car_width,test_car.car_height, angle=test_car.theta,color="red",alpha=1)
+        ax.add_patch(b)
+
+    # ax.set_aspect('equal', 'box')
+    ax.set_xlim(0,1250)
+    ax.set_ylim(-20,180)
+    ax.grid()
+    plt.show()
 
 
 

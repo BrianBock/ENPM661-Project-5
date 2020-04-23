@@ -19,7 +19,7 @@ class car(pygame.sprite.Sprite):
         if car_type == "protagonist":
             self.car = pygame.image.load('assets/orange_car.png')
             self.stationary=False
-            self.vel=5
+            self.vel=12
 
 
         if car_type == "obstacle":
@@ -91,11 +91,53 @@ class car(pygame.sprite.Sprite):
         return new_pos
 
 
-        new_pos_list=[]
-        for x,y in range(0,1000):
-            a=(x-self.x)**2+(y-self.y)**2
-            if math.isclose(a,turnRadius**2,rel_tol=1e-1):
-                new_pos_list.append((x,y))
+        # new_pos_list=[]
+        # for x,y in range(0,1000):
+        #     a=(x-self.x)**2+(y-self.y)**2
+        #     if math.isclose(a,turnRadius**2,rel_tol=1e-1):
+        #         new_pos_list.append((x,y))
+
+
+        #things to know about a node
+        # Constants we know: l, a2, wheel speed, wheel radius
+        # starting x, y, theta, vx, vy, wheel angle
+        # after a dt, want to know new x,y,theta, vx,vy
+        # need to find initial position of center of rotation (COR)
+            # Find R
+            # Use R, theta, x, y to find COR in world frame
+            # Use R, a2 to find R1
+        # Use R1, wheel speed, wheel radius to compute angular velocity around COR (Av)
+
+
+    def turnCar(self,wheel_angle):
+        R=math.sqrt(self.a2**2+self.l**2*sympy.cot(wheel_angle)**2)
+        alpha=math.asin(self.a2/R)
+        R1=R*math.cos(alpha)
+
+        # Initial position of Center of Rotation in world frame (x,y)
+        COR_i=(-R1*math.cos(np.deg2rad(self.theta))+self.x,-(R*math.sin(alpha))*math.sin(np.deg2rad(self.theta))+self.y)
+
+        # Final position of Center of Rotation in world frame (x,y)
+        COR_f=(COR_i[0]+self.vel*math.sin(np.deg2rad(self.theta))*self.dt,COR_i[1]+self.vel*math.cos(np.deg2rad(self.theta))*self.dt)
+
+        ang_vel=self.wheel_radius*self.wheel_speed/(R1+self.W/2)
+        dtheta=np.rad2deg(ang_vel*self.dt)
+
+        B=(180-dtheta)/2-np.rad2deg(alpha)
+
+        L=2*R*math.sin(np.deg2rad(dtheta)/2)
+        # Change in position of car in car frame (x,y)
+        d_c=(L*math.sin(np.deg2rad(B)), L*math.cos(np.deg2rad(B)))
+
+
+        self.x=d_c[0]*math.cos(np.deg2rad(theta))+COR_f[0]
+        self.y=d_c[1]*math.sin(np.deg2rad(theta))+COR_f[1]
+
+        self.theta+=dtheta
+
+
+
+
 
 
 

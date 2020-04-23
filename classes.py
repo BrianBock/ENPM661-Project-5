@@ -1,20 +1,30 @@
+# Import Python functions
 import math
 import numpy as np
-# import sympy
 import pygame
-# pygame.init()
+
+# Import our own functions
+from trigfunctions import*
 
 class car(pygame.sprite.Sprite):
     def __init__(self,x,y,car_type):
         pygame.sprite.Sprite.__init__(self)
         # super().__init__()
-        self.x=x # start position
-        self.y=y # start position
+
+        # Start position of sprite
+        self.spritex=x # start position
+        self.spritey=y # start position
+
+        # Car sprite dimensions
         self.car_width=130 # total width of car (for bounding box)
         self.car_height=70 # total height of car (for bounding box)
+        self.wheel_radius = 15 
 
+        # Start position of the car origin
+        self.x=self.spritex+self.car_width//2
+        self.y=self.spritey+self.car_height//2
 
-        # self.wheel_radius
+        self.dt=1
 
         if car_type == "protagonist":
             self.car = pygame.image.load('assets/orange_car.png')
@@ -48,17 +58,17 @@ class car(pygame.sprite.Sprite):
     def moveCar(self,keys,canvas_size):
         canvas_width,canvas_height=canvas_size
         
-        if keys[pygame.K_LEFT] and self.x > self.vel: 
-            self.x -= self.vel
+        if keys[pygame.K_LEFT] and self.spritex > self.vel: 
+            self.spritex -= self.vel
 
-        elif keys[pygame.K_RIGHT] and self.x < (canvas_width - self.vel - self.car_width):
-            self.x += self.vel
+        elif keys[pygame.K_RIGHT] and self.spritex < (canvas_width - self.vel - self.car_width):
+            self.spritex += self.vel
 
-        if keys[pygame.K_DOWN] and self.y <(canvas_height-self.vel-self.car_height):
-            self.y+=self.vel
+        if keys[pygame.K_DOWN] and self.spritey <(canvas_height-self.vel-self.car_height):
+            self.spritey+=self.vel
 
-        elif keys[pygame.K_UP] and self.y > self.vel:
-            self.y-=self.vel
+        elif keys[pygame.K_UP] and self.spritey > self.vel:
+            self.spritey-=self.vel
 
 
     def turn(self,wheel_angle,direction,current_pos, current_vel, turn_time):
@@ -73,18 +83,18 @@ class car(pygame.sprite.Sprite):
         # car frame forward velocity remains constant while the car turns
 
         if direction == "left":
-            turnRadius=math.sqrt(a2**2+l**2*sympy.cot(wheel_angle)**2)
+            turnRadius=math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
             # wheel_angle=sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
         elif direction == "right":
             # wheel_angle=-sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
-            turnRadius=-math.sqrt(a2**2+l**2*sympy.cot(wheel_angle)**2)
+            turnRadius=-math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
 
         arcTraveled=forward_vel*turn_time
         angleTraveled=np.rad2deg(arcTraveled/turnRadius) #s=0r
 
         new_theta=theta+angleTraveled
-        new_x=-turnRadius*math.cos(np.deg2rad(new_theta))
-        new_y=turnRadius*math.sin(np.deg2rad(new_theta))
+        new_x=-turnRadius*cosd(new_theta)
+        new_y=turnRadius*sind(new_theta)
 
 
         new_pos=(new_x,new_y,new_theta)
@@ -110,30 +120,32 @@ class car(pygame.sprite.Sprite):
 
 
     def turnCar(self,wheel_angle):
-        R=math.sqrt(self.a2**2+self.l**2*sympy.cot(wheel_angle)**2)
+        R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
         alpha=math.asin(self.a2/R)
         R1=R*math.cos(alpha)
 
         # Initial position of Center of Rotation in world frame (x,y)
-        COR_i=(-R1*math.cos(np.deg2rad(self.theta))+self.x,-(R*math.sin(alpha))*math.sin(np.deg2rad(self.theta))+self.y)
+        COR_i=(-R1*cosd(self.theta)+self.x,-(R*math.sin(alpha))*sind(self.theta)+self.y)
 
         # Final position of Center of Rotation in world frame (x,y)
-        COR_f=(COR_i[0]+self.vel*math.sin(np.deg2rad(self.theta))*self.dt,COR_i[1]+self.vel*math.cos(np.deg2rad(self.theta))*self.dt)
+        COR_f=(COR_i[0]+self.vel*sind(self.theta)*self.dt,COR_i[1]+self.vel*cosd(self.theta)*self.dt)
 
         ang_vel=self.wheel_radius*self.wheel_speed/(R1+self.W/2)
         dtheta=np.rad2deg(ang_vel*self.dt)
 
         B=(180-dtheta)/2-np.rad2deg(alpha)
 
-        L=2*R*math.sin(np.deg2rad(dtheta)/2)
+        L=2*R*sind(dtheta/2)
         # Change in position of car in car frame (x,y)
-        d_c=(L*math.sin(np.deg2rad(B)), L*math.cos(np.deg2rad(B)))
+        d_c=(L*sind(B), L*cosd(B))
 
 
-        self.x=d_c[0]*math.cos(np.deg2rad(theta))+COR_f[0]
-        self.y=d_c[1]*math.sin(np.deg2rad(theta))+COR_f[1]
+        self.x=d_c[0]*cosd(theta)+COR_f[0]
+        self.y=d_c[1]*sind(theta)+COR_f[1]
 
         self.theta+=dtheta
+
+        pygame.transform.rotation(self.car,self.theta)
 
 
 

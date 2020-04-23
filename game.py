@@ -30,6 +30,9 @@ class car_game():
         self.orange_car=car(10,10,"protagonist")
         self.all_sprites.add(self.orange_car)
 
+        # Create stationary cars
+        self.generateBlueCars()
+
         # Create active cars
         for i in range (0,random.randint(1,3)):
             tempcar=car(0,0,"dynamic")
@@ -45,7 +48,7 @@ class car_game():
 
 
 
-    def generateRandomObstacle(self,obst_list):
+    def generateRandomObstacle(self):
         # print("Attempting to spawn a new blue car")
         randx=random.randint(1000,2000)
         randy=random.randint(10,350)
@@ -55,7 +58,22 @@ class car_game():
         self.obst_list.add(new_obst)
         self.all_sprites.add(new_obst)
 
-        return obst_list
+        # return self.obst_list
+
+
+
+    def generateBlueCars(self):
+
+        start_pos_list=[(130,220),(200,330),(500,10)]
+
+        for start_pos in start_pos_list:
+            x,y=start_pos
+            new_obst=car(x,y,"obstacle")
+            self.obst_list.add(new_obst)
+            self.all_sprites.add(new_obst)
+
+
+
 
 
 
@@ -86,15 +104,15 @@ while game.run:
 
     # If there are no blue cars, make some more
     # print(len(obst_list))
-    if len(game.obst_list)<3:
-        for i in range(0,random.randint(3,10)):
-            game.obst_list=game.generateRandomObstacle(game.obst_list)
+    # if len(game.obst_list)<3:
+    #     for i in range(0,random.randint(3,10)):
+    #         game.obst_list=game.generateRandomObstacle()
 
     for obstacle in game.obst_list:
         obstacle.x-=game.road_speed
         if obstacle.x < obstacle.car_width * -1: # If our obstacle is off the screen we will remove it
             obstacle.kill()
-            obst_list=game.generateRandomObstacle(game.obst_list) # create a new obstacle to replace it
+            # obst_list=game.generateRandomObstacle() # create a new obstacle to replace it
 
     for active_car in game.active_list:
         if active_car.x < active_car.car_width * -1: # If our obstacle is off the screen we will remove it

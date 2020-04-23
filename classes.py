@@ -14,15 +14,19 @@ class car(pygame.sprite.Sprite):
         # Start position of sprite
         self.spritex=x # start position
         self.spritey=y # start position
+        self.theta=0
 
         # Car sprite dimensions
         self.car_width=130 # total width of car (for bounding box)
         self.car_height=70 # total height of car (for bounding box)
-        self.wheel_radius = 15 
+        self.wheel_radius = 2
+
 
         # Start position of the car origin
         self.x=self.spritex+self.car_width//2
         self.y=self.spritey+self.car_height//2
+
+        self.wheel_speed=5
 
         self.dt=1
 
@@ -51,8 +55,21 @@ class car(pygame.sprite.Sprite):
         if not self.stationary:
             # Front wheel drive car utlizing Ackermann Steering
             # http://ckw.phys.ncku.edu.tw/public/pub/Notes/GeneralPhysics/Powerpoint/Extra/05/11_0_0_Steering_Theroy.pdf
-            self.l=20 # length between front and rear wheel axes (wheelbase)
+            self.l=100 # length between front and rear wheel axes (wheelbase)
             self.a2=self.l/2 # distance from the back axel to the center of mass of the car
+            self.W=self.car_height # distance between the left and right wheels
+
+    def switchCar2SpriteOrigin(self):
+        self.spritex=self.x-self.car_width//2
+        self.spritex=self.x-self.car_width//2
+
+
+    def rot_center(self,angle):
+        """rotate an image while keeping its center"""
+        # http://www.pygame.org/wiki/RotateCenter?parent=CookBook
+        rot_image = pygame.transform.rotate(self.car, angle)
+        rot_rect = rot_image.get_rect(center=self.rect.center)
+        return rot_image,rot_rect
 
 
     def moveCar(self,keys,canvas_size):
@@ -69,6 +86,9 @@ class car(pygame.sprite.Sprite):
 
         elif keys[pygame.K_UP] and self.spritey > self.vel:
             self.spritey-=self.vel
+
+        elif keys[pygame.K_a]:
+            self.turnCar(15)
 
 
     def turn(self,wheel_angle,direction,current_pos, current_vel, turn_time):
@@ -140,12 +160,13 @@ class car(pygame.sprite.Sprite):
         d_c=(L*sind(B), L*cosd(B))
 
 
-        self.x=d_c[0]*cosd(theta)+COR_f[0]
-        self.y=d_c[1]*sind(theta)+COR_f[1]
+        self.x=d_c[0]*cosd(self.theta)+COR_f[0]
+        self.y=d_c[1]*sind(self.theta)+COR_f[1]
 
         self.theta+=dtheta
 
-        pygame.transform.rotation(self.car,self.theta)
+        self.switchCar2SpriteOrigin()
+        self.car,self.rect=self.rot_center(self.theta)
 
 
 

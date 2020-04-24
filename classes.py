@@ -184,8 +184,8 @@ class car(pygame.sprite.Sprite):
         d_c=(L*sind(B), L*cosd(B))
         print("dc="+str(d_c))
 
-        self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt#+(COR_f[0]-COR_i[0])
-        self.y+=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt#+(COR_f[1]-COR_i[1])
+        self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt+d_c[1]*cosd(self.theta)#+(COR_f[0]-COR_i[0])
+        self.y+=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt+d_c[0]*sind(self.theta)#+(COR_f[1]-COR_i[1])
 
         self.theta+=dtheta
 
@@ -196,7 +196,8 @@ class car(pygame.sprite.Sprite):
 
         self.updateSpriteOrigin()
         # self.car,self.rect=self.rot_center(self.theta)
-        # self.car=pygame.image.load('assets/orange_car/'+str(int(self.theta))+'.png')
+        # theta = self.theta % 360
+        # self.car=pygame.image.load('assets/orange_car/'+str(int(theta))+'.png')
         # self.car = pygame.transform.scale(self.car, (self.car_width_px, self.car_height_px))
         # self.rect = self.car.get_rect()
 

@@ -37,7 +37,7 @@ class car(pygame.sprite.Sprite):
         if car_type == "protagonist":
             self.car = pygame.image.load('assets/orange_car.png')
             self.stationary=False
-            self.vel=27 #m/s
+            self.vel=12 #m/s
 
 
         if car_type == "obstacle":
@@ -62,6 +62,14 @@ class car(pygame.sprite.Sprite):
             self.l=100 # length between front and rear wheel axes (wheelbase)
             self.a2=self.l/2 # distance from the back axel to the center of mass of the car
             self.W=self.car_height # distance between the left and right wheels
+
+            # Load all of the rotated car images into the game
+            # self.angled_car_list=[]
+            # for i in range (360):
+            #     rotcar = pygame.image.load('assets/orange_car/orange_car_'+str(i)+'.png')
+            #     rotcar = pygame.Surface.convert_alpha(rotcar)
+            #     rotcar = pygame.transform.scale(rotcar, (self.car_width_px, self.car_height_px))
+            #     self.angled_car_list.append(rotcar)
 
     def updateSpriteOrigin(self):
         self.spritex=self.x-self.car_width//2
@@ -196,9 +204,11 @@ class car(pygame.sprite.Sprite):
 
         self.updateSpriteOrigin()
         # self.car,self.rect=self.rot_center(self.theta)
-        # theta = self.theta % 360
-        # self.car=pygame.image.load('assets/orange_car/'+str(int(theta))+'.png')
-        # self.car = pygame.transform.scale(self.car, (self.car_width_px, self.car_height_px))
+        theta = self.theta % 360
+        # self.car=pygame.transform.rotozoom(self.car,theta,1)
+        # self.car = self.angled_car_list[theta]
+
+
         # self.rect = self.car.get_rect()
 
 

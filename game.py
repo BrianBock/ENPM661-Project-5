@@ -85,7 +85,6 @@ class car_game():
         # Redraw all cars
         for sprite in self.all_sprites:
             self.win.blit(sprite.car,(int(sprite.spritex),int(sprite.spritey)))
-        # pygame.sprite.spritecollide(orange_car, obst_list, True)
 
         pygame.display.update()
     
@@ -110,12 +109,14 @@ while game.run:
 
     for obstacle in game.obst_list:
         obstacle.spritex-=game.road_speed
-        if obstacle.spritex < obstacle.car_width * -1: # If our obstacle is off the screen we will remove it
+        # obstacle.updateCarOrigin()
+        if obstacle.spritex < obstacle.car_width_px * -1: # If our obstacle is off the screen we will remove it
+            print(obstacle.spritex)
             obstacle.kill()
             # obst_list=game.generateRandomObstacle() # create a new obstacle to replace it
 
     for active_car in game.active_list:
-        if active_car.spritex < active_car.car_width * -1: # If our obstacle is off the screen we will remove it
+        if active_car.spritex < active_car.car_width_px * -1: # If our obstacle is off the screen we will remove it
             game.active_list.pop(game.active_list.index(game.active_car))
 
 
@@ -133,7 +134,6 @@ while game.run:
     # Move the orange car based on arrow keys
     keys = pygame.key.get_pressed()
     game.orange_car.moveCar(keys,(game.canvas_width,game.canvas_height))
-    game.orange_car.turnCar(45)
     
 
 

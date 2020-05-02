@@ -84,7 +84,7 @@ class car_game():
 
         # Redraw all cars
         for sprite in self.all_sprites:
-            self.win.blit(sprite.car,(int(sprite.spritex),int(sprite.spritey)))
+            self.win.blit(sprite.car_image_new,(int(sprite.spritex),int(sprite.spritey)))
 
         pygame.display.update()
     

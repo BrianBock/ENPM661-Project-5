@@ -35,24 +35,25 @@ class car(pygame.sprite.Sprite):
 
 
         if car_type == "protagonist":
-            self.car = pygame.image.load('assets/orange_car.png')
+            self.car_image = pygame.image.load('assets/orange_car.png')
             self.stationary=False
             self.vel=12 #m/s
 
 
         if car_type == "obstacle":
             # car does not move
-            self.car = pygame.image.load('assets/blue_car.png')
+            self.car_image = pygame.image.load('assets/blue_car.png')
             self.stationary=True
 
         if car_type == "dynamic":
             # car moves by itself
-            self.car = pygame.image.load('assets/green_car.png')
+            self.car_image = pygame.image.load('assets/green_car.png')
             self.stationary=False
             self.vel=7
 
-        self.car = pygame.transform.scale(self.car, (self.car_width_px, self.car_height_px))
-        self.rect = self.car.get_rect()
+        self.car_image = pygame.transform.scale(self.car_image, (self.car_width_px, self.car_height_px))
+        self.car_image_new=self.car_image
+        self.rect = self.car_image.get_rect()
         # self.rect.x = x
         # self.rect.y = y
 
@@ -205,6 +206,11 @@ class car(pygame.sprite.Sprite):
         self.updateSpriteOrigin()
         # self.car,self.rect=self.rot_center(self.theta)
         theta = self.theta % 360
+        self.car_image_new = pygame.transform.rotate(self.car_image, theta)
+        rect = self.car_image.get_rect()
+        # self.screen.blit(rotated, car.position - (rect.width / 2, rect.height / 2))
+        # self.screen.blit(self.car, self.car.spritex, self.spritey) - (rect.width / 2, rect.height / 2))
+
         # self.car=pygame.transform.rotozoom(self.car,theta,1)
         # self.car = self.angled_car_list[theta]
 

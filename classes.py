@@ -168,14 +168,6 @@ class car(pygame.sprite.Sprite):
         theta = self.theta % 360
         self.car_image_new = pygame.transform.rotate(self.car_image, theta)
         rect = self.car_image.get_rect()
-        # self.screen.blit(rotated, car.position - (rect.width / 2, rect.height / 2))
-        # self.screen.blit(self.car, self.car.spritex, self.spritey) - (rect.width / 2, rect.height / 2))
-
-        # self.car=pygame.transform.rotozoom(self.car,theta,1)
-        # self.car = self.angled_car_list[theta]
-
-
-        # self.rect = self.car.get_rect()
 
 
 

@@ -87,7 +87,6 @@ class Window():
                 self.win.blit(self.lane_line,(0-self.x,lane_pos_y))
 
                 for j in range(lane_art_count):
-                    print("new lane")
                     lane_pos_x=j*self.lane_line.get_width()-self.x
                     # if lane_pos_x<self.x+self.width_px:
                     self.win.blit(self.lane_line,(lane_pos_x,lane_pos_y))
@@ -155,7 +154,9 @@ class World():
         # self.height_px=1600
 
 
-        self.generateBlueCars(game)
+        # self.generateBlueCars(game)
+        for i in range (5,35):
+            self.generateRandomObstacle(game)
         self.generateGreenCars(game)
         # self.showWorldMap(game)
 
@@ -169,13 +170,27 @@ class World():
     def generateBlueCars(self,game):
     # Create stationary cars
         print("Populating Blue cars")
-        start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408)]
+        start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408),(835,495),(1067,405),(1158,500)]
 
         for start_pos in start_pos_list:
             x,y=start_pos
             new_obst=car(x,y,"obstacle")
             game.obst_list.add(new_obst)
             game.all_sprites.add(new_obst)
+
+
+    def generateRandomObstacle(self,game):
+        # print("Attempting to spawn a new blue car")
+        randx=random.randint(250,self.width_px-400)
+        lanes=[225,320,405,500]
+        randy=random.choice(lanes)
+        new_obst=car(randx,randy,"obstacle")
+        # a=pygame.sprite.spritecollide(car(randx,randy,"obstacle"), obst_list, True)
+        # print(a)
+        game.obst_list.add(new_obst)
+        game.all_sprites.add(new_obst)
+
+        # return self.obst_list
 
 
 
@@ -261,17 +276,7 @@ class World():
 
 
         # plt.show()
-    # def generateRandomObstacle(self):
-    #     # print("Attempting to spawn a new blue car")
-    #     randx=random.randint(1000,2000)
-    #     randy=random.randint(10,350)
-    #     new_obst=car(randx,randy,"obstacle")
-    #     # a=pygame.sprite.spritecollide(car(randx,randy,"obstacle"), obst_list, True)
-    #     # print(a)
-    #     self.obst_list.add(new_obst)
-    #     self.all_sprites.add(new_obst)
 
-    #     # return self.obst_list
 
 
 class car_game():

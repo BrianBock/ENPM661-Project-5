@@ -40,7 +40,7 @@ class Window():
         self.grass = pygame.image.load('assets/grass.jpg')
         self.grass = pygame.transform.scale(self.grass, (self.lane_width,self.lane_width))
  
-
+        self.finish = pygame.image.load('assets/finish_line2.png')
 
     def redrawGameWindow(self,game,WorldSize_px):
         # Redraw background
@@ -113,6 +113,10 @@ class Window():
                 if grass_pos<self.x+self.width_px:
                     self.win.blit(self.grass,(grass_pos-self.x,WorldSize_px[1]-self.grass.get_height()-self.y))
 
+
+        if self.x+self.width_px>WorldSize_px[0]-2*self.finish.get_width():
+            print("finish")
+            self.win.blit(self.finish,(WorldSize_px[0]-2*self.finish.get_width()-self.x,-self.y))
 
 
 

@@ -15,9 +15,6 @@ world=World(game)
 
 while game.run:
     game.clock.tick(100)
-    
-    # game.bgX -= game.road_speed  # Move both background images back
-    # game.bgX2 -= game.road_speed
 
     # If there are no blue cars, make some more
     # print(len(obst_list))
@@ -25,12 +22,10 @@ while game.run:
     #     for i in range(0,random.randint(3,10)):
     #         game.obst_list=game.generateRandomObstacle()
 
-    for obstacle in game.obst_list:
-        # obstacle.spritex-=game.road_speed
-        # obstacle.updateCarOrigin()
-        if obstacle.spritex < obstacle.car_width_px * -1: # If our obstacle is off the screen we will remove it
-            print(obstacle.spritex)
-            obstacle.kill()
+    # for obstacle in game.obst_list:
+    #     if obstacle.spritex < obstacle.car_width_px * -1: # If our obstacle is off the screen we will remove it
+    #         print(obstacle.spritex)
+    #         obstacle.kill()
             # obst_list=game.generateRandomObstacle() # create a new obstacle to replace it
 
     for active_car in game.active_list:
@@ -40,11 +35,6 @@ while game.run:
         #     game.active_list.pop(game.active_list.index(game.active_car))
 
 
-    # if game.bgX < game.bg.get_width() * -1:  # If our bg is at the -width then reset its position
-    #     game.bgX = game.bg.get_width()
-
-    # if game.bgX2 < game.bg.get_width() * -1:  # If our bg is at the -width then reset its position
-    #     game.bgX2 = game.bg.get_width()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

@@ -68,13 +68,6 @@ class car(pygame.sprite.Sprite):
             self.a2=self.l/2 # distance from the back axel to the center of mass of the car
             self.W=self.car_height # distance between the left and right wheels
 
-            # Load all of the rotated car images into the game
-            # self.angled_car_list=[]
-            # for i in range (360):
-            #     rotcar = pygame.image.load('assets/orange_car/orange_car_'+str(i)+'.png')
-            #     rotcar = pygame.Surface.convert_alpha(rotcar)
-            #     rotcar = pygame.transform.scale(rotcar, (self.car_width_px, self.car_height_px))
-            #     self.angled_car_list.append(rotcar)
 
     def updateSpriteOrigin(self):
         self.spritex=self.x-self.car_width_px//2
@@ -115,43 +108,6 @@ class car(pygame.sprite.Sprite):
             self.turnCar(-2)
 
         self.updateCarOrigin()
-        
-
-    # def turn(self,wheel_angle,direction,current_pos, current_vel, turn_time):
-    #     # Simplifying assumption: the front wheels must remain parallel to each other.
-    #     # There is therefore only one wheel angle and not two
-    #     l=self.l
-    #     a2=self.a2
-    #     x,y,theta=current_pos # world coordinates
-
-    #     forward_vel,angular_vel=current_vel # car velocity in car frame (+ angular_vel turning left)
-    #     # angular velocity should be zero when we start to turn
-    #     # car frame forward velocity remains constant while the car turns
-
-    #     if direction == "left":
-    #         turnRadius=math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
-    #         # wheel_angle=sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
-    #     elif direction == "right":
-    #         # wheel_angle=-sympy.acot(math.sqrt(turnRadius**2-a2**2-l**2))
-    #         turnRadius=-math.sqrt(a2**2+l**2*cotd(wheel_angle)**2)
-
-    #     arcTraveled=forward_vel*turn_time
-    #     angleTraveled=np.rad2deg(arcTraveled/turnRadius) #s=0r
-
-    #     new_theta=theta+angleTraveled
-    #     new_x=-turnRadius*cosd(new_theta)
-    #     new_y=turnRadius*sind(new_theta)
-
-
-    #     new_pos=(new_x,new_y,new_theta)
-    #     return new_pos
-
-
-        # new_pos_list=[]
-        # for x,y in range(0,1000):
-        #     a=(x-self.x)**2+(y-self.y)**2
-        #     if math.isclose(a,turnRadius**2,rel_tol=1e-1):
-        #         new_pos_list.append((x,y))
 
 
         #things to know about a node

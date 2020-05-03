@@ -52,7 +52,7 @@ class Window():
         self.lane_count=4
         
         # Redraw shoulder lines
-        shoulder_count=WorldSize_px[0]//self.solid_line.get_width()-self.x
+        shoulder_count=WorldSize_px[0]//self.solid_line.get_width()
 
         top_shoulder_pos_y=2*self.lane_width-self.y
         top_shoulder_pos_x=0
@@ -79,17 +79,18 @@ class Window():
                 
             
         # Redraw lane lines
-        lane_art_count=WorldSize_px[0]//self.lane_line.get_width()-self.x
+        lane_art_count=WorldSize_px[0]//self.lane_line.get_width()
         for i in range(self.lane_count-1):
-            lane_pos=i*self.lane_width-self.y+3*self.lane_width
+            lane_pos_y=i*self.lane_width-self.y+3*self.lane_width
             # only draw the lines that would be visible (for speed)
-            if lane_pos<=self.y+self.height_px:
-                self.win.blit(self.lane_line,(0-self.x,lane_pos))
+            if lane_pos_y<=self.y+self.height_px:
+                self.win.blit(self.lane_line,(0-self.x,lane_pos_y))
 
-                # for j in range(lane_art_count):
-                #     lane_art_pos=j*self.lane_line.get_width()-self.x
-                #     if lane_art_pos<self.x+self.width_px:
-                #         self.win.blit(self.lane_line,(lane_art_pos,lane_pos))
+                for j in range(lane_art_count):
+                    print("new lane")
+                    lane_pos_x=j*self.lane_line.get_width()-self.x
+                    # if lane_pos_x<self.x+self.width_px:
+                    self.win.blit(self.lane_line,(lane_pos_x,lane_pos_y))
                 
 
 

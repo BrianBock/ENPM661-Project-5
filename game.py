@@ -35,7 +35,6 @@ while game.run:
 
     for active_car in game.active_list:
         active_car.spritex+=active_car.vel
-        print(active_car.spritex)
         active_car.updateCarOrigin()
         # if active_car.spritex < active_car.car_width_px * -1: # If our obstacle is off the screen we will remove it
         #     game.active_list.pop(game.active_list.index(game.active_car))

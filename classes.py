@@ -2,6 +2,7 @@
 import math
 import numpy as np
 import pygame
+import random
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Patch
 
@@ -52,7 +53,7 @@ class car(pygame.sprite.Sprite):
             self.car_image = pygame.image.load('assets/green_car.png')
             self.body_color=(0,255,0,1)
             self.stationary=False
-            self.vel=4
+            self.vel=random.randint(1,6)
 
         self.car_image = pygame.transform.scale(self.car_image, (self.car_width_px, self.car_height_px))
         self.car_image_new=self.car_image

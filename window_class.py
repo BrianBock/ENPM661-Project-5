@@ -61,7 +61,7 @@ class Window():
             self.win.blit(self.solid_line,(0-self.x,bot_shoulder_pos))
 
 
-        # Draw grass past shoulder
+        # Draw grass past shoulder (top)
         if self.y<self.grass.get_height():
             self.win.blit(self.grass,(0,0-self.y))
 
@@ -70,6 +70,17 @@ class Window():
                 grass_pos=i*self.grass.get_width()
                 if grass_pos<self.x+self.width_px:
                     self.win.blit(self.grass,(grass_pos-self.x,0-self.y))
+
+
+        # Draw grass past shoulder (bottom)
+        if self.y+self.height_px>WorldSize_px[1]-self.grass.get_height():
+            self.win.blit(self.grass,(0,WorldSize_px[1]-self.grass.get_height()-self.y))
+
+            grass_count=WorldSize_px[0]//self.grass.get_width()
+            for i in range(grass_count):
+                grass_pos=i*self.grass.get_width()
+                if grass_pos<self.x+self.width_px:
+                    self.win.blit(self.grass,(grass_pos-self.x,WorldSize_px[1]-self.grass.get_height()-self.y))
 
 
         # Redraw lane lines

@@ -8,6 +8,7 @@ import cv2
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Patch
+import pickle
 
 
 # Import our own functions
@@ -136,8 +137,8 @@ class Window():
 
 
 class World():
-    def __init__(self,game):
-
+    def __init__(self,game,ManuallyAddCars):
+        UserDefinedCars=False
         self.width_m=200 # meters
         self.height_m=24 # meters
 
@@ -153,12 +154,16 @@ class World():
         # self.width_px=4000
         # self.height_px=1600
 
+        if ManuallyAddCars == False and UserDefinedCars == False:
+            # self.generateBlueCars(game)
+            for i in range (5,35):
+                self.generateRandomObstacle(game)
+        
+        elif ManuallyAddCars and UserDefinedCars:
+            self.generateBlueCars(game,UserDefinedCars)
 
-        # self.generateBlueCars(game)
-        for i in range (5,35):
-            self.generateRandomObstacle(game)
         self.generateGreenCars(game)
-        # self.showWorldMap(game)
+            # self.showWorldMap(game)
 
 
 
@@ -167,10 +172,16 @@ class World():
         game.all_sprites.add(game.orange_car)
 
 
-    def generateBlueCars(self,game):
+    def generateBlueCars(self,game,UserDefinedCars):
     # Create stationary cars
         print("Populating Blue cars")
-        start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408),(835,495),(1067,405),(1158,500)]
+        # start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408),(835,495),(1067,405),(1158,500)]
+
+        start_pos_list=[]
+        if UserDefinedCars:
+            with open('car_positions.data','rb') as filehandle:
+                start_pos_list=pickle.load(filehandle)
+                print(start_pos_list)
 
         for start_pos in start_pos_list:
             x,y=start_pos
@@ -180,7 +191,7 @@ class World():
 
 
     def generateRandomObstacle(self,game):
-        # print("Attempting to spawn a new blue car")
+        print("Randomly poulating blue cars")
         randx=random.randint(250,self.width_px-400)
         lanes=[225,320,405,500]
         randy=random.choice(lanes)

@@ -76,12 +76,12 @@ class car(pygame.sprite.Sprite):
             #     self.angled_car_list.append(rotcar)
 
     def updateSpriteOrigin(self):
-        self.spritex=self.x-self.car_width//2
-        self.spritey=self.y-self.car_width//2
+        self.spritex=self.x-self.car_width_px//2
+        self.spritey=self.y-self.car_height_px//2
 
     def updateCarOrigin(self):
-        self.x=self.spritex+self.car_width//2
-        self.y=self.spritey+self.car_height//2
+        self.x=self.spritex+self.car_width_px//2
+        self.y=self.spritey+self.car_height_px//2
 
 
     def rot_center(self,angle):

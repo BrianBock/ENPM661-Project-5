@@ -34,8 +34,11 @@ while game.run:
             # obst_list=game.generateRandomObstacle() # create a new obstacle to replace it
 
     for active_car in game.active_list:
-        if active_car.spritex < active_car.car_width_px * -1: # If our obstacle is off the screen we will remove it
-            game.active_list.pop(game.active_list.index(game.active_car))
+        active_car.spritex+=active_car.vel
+        print(active_car.spritex)
+        active_car.updateCarOrigin()
+        # if active_car.spritex < active_car.car_width_px * -1: # If our obstacle is off the screen we will remove it
+        #     game.active_list.pop(game.active_list.index(game.active_car))
 
 
     # if game.bgX < game.bg.get_width() * -1:  # If our bg is at the -width then reset its position
@@ -56,8 +59,10 @@ while game.run:
     
 
 
-    
-
+    cursor=pygame.mouse.get_pos()
+    window_pos=(world.window.x,world.window.y)
+    cursor_pos=(cursor[0]+window_pos[0],cursor[1]+window_pos[1])
+    print(cursor_pos)
     world.window.redrawGameWindow(game,world.WorldSize_px) 
     
     

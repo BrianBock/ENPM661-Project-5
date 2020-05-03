@@ -42,11 +42,12 @@ class Window():
  
         self.finish = pygame.image.load('assets/finish_line2.png')
 
+    
+
+
     def redrawGameWindow(self,game,WorldSize_px):
         # Redraw background
         self.win.fill((56,56,59))
-        
-
 
         self.lane_count=4
         
@@ -114,8 +115,9 @@ class Window():
                     self.win.blit(self.grass,(grass_pos-self.x,WorldSize_px[1]-self.grass.get_height()-self.y))
 
 
+        # Draw finish line
         if self.x+self.width_px>WorldSize_px[0]-2*self.finish.get_width():
-            print("finish")
+            # print("finish")
             self.win.blit(self.finish,(WorldSize_px[0]-2*self.finish.get_width()-self.x,-self.y))
 
 
@@ -166,7 +168,7 @@ class World():
     def generateBlueCars(self,game):
     # Create stationary cars
         print("Populating Blue cars")
-        start_pos_list=[(130,220),(200,330),(500,200)]
+        start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408)]
 
         for start_pos in start_pos_list:
             x,y=start_pos
@@ -186,8 +188,9 @@ class World():
             # # Eliminate cars on the lane lines
             # if (100-tempcar.car_height<=randy<=100+tempcar.car_height) or (200-tempcar.car_height<=randy<=200+tempcar.car_height) or (300-tempcar.car_height<=randy<=300+tempcar.car_height):
             #     randy=random.randint(50,350)
-            game.active_list.add(car(randx,randy,"dynamic"))
-            game.all_sprites.add(car(randx,randy,"dynamic"))
+            greencar=car(randx,randy,"dynamic")
+            game.active_list.add(greencar)
+            game.all_sprites.add(greencar)
         # tempcar.kill()
         # obst_list=[]
 
@@ -206,10 +209,11 @@ class World():
         elif keys[pygame.K_UP] and self.window.y > self.window.vel:
             self.window.y-=self.window.vel
 
-        print(self.window.x,self.window.y)
+        # print(self.window.x,self.window.y)
         game.orange_car.x=self.window.x+self.window.width_px//2
         game.orange_car.y=self.window.y+self.window.height_px//2
         game.orange_car.updateSpriteOrigin()
+
 
 
 

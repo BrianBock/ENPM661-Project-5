@@ -177,6 +177,9 @@ class World():
             self.window.y-=self.window.vel
 
         print(self.window.x,self.window.y)
+        game.orange_car.x=self.window.x+self.window.width_px//2
+        game.orange_car.y=self.window.y+self.window.height_px//2
+        game.orange_car.updateSpriteOrigin()
 
 
 

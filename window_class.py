@@ -28,7 +28,7 @@ class Window():
 
         # Position of the upper left corner of the viewing window, in world coordinates (pix); Moves with the orange car
         self.x=0
-        self.y=170
+        self.y=120
         self.vel=10
 
         self.lane_width=90 # px
@@ -51,21 +51,53 @@ class Window():
         self.lane_count=4
         
         # Redraw shoulder lines
-        top_shoulder_pos=2*self.lane_width-self.y
-        bot_shoulder_pos=WorldSize_px[1]-2*self.lane_width-self.y
-            # only draw the lines that would be visible (for speed)
-        if top_shoulder_pos<=self.y+self.height_px:
-            self.win.blit(self.solid_line,(0-self.x,top_shoulder_pos))
+        shoulder_count=WorldSize_px[0]//self.solid_line.get_width()-self.x
 
-        if bot_shoulder_pos<=self.y+self.height_px:
-            self.win.blit(self.solid_line,(0-self.x,bot_shoulder_pos))
+        top_shoulder_pos_y=2*self.lane_width-self.y
+        top_shoulder_pos_x=0
+        bot_shoulder_pos_y=WorldSize_px[1]-2*self.lane_width-self.y
+        bot_shoulder_pos_x=0
+        
+            # Top shoulder
+        if top_shoulder_pos_y<=self.y+self.height_px:
+            self.win.blit(self.solid_line,(top_shoulder_pos_x,top_shoulder_pos_y))
+            for i in range(shoulder_count):
+                # Top shoulder
+                top_shoulder_pos_x=i*self.solid_line.get_width()-self.x
+                if top_shoulder_pos_x<self.x+self.width_px:
+                    self.win.blit(self.solid_line,(top_shoulder_pos_x,top_shoulder_pos_y))
+
+            # Bottom shoulder
+        
+        if bot_shoulder_pos_y<=self.y+self.height_px:
+            self.win.blit(self.solid_line,(bot_shoulder_pos_x,bot_shoulder_pos_y))
+            for i in range(shoulder_count):
+                bot_shoulder_pos_x=i*self.solid_line.get_width()-self.x
+                if bot_shoulder_pos_x<self.x+self.width_px:
+                    self.win.blit(self.solid_line,(bot_shoulder_pos_x,bot_shoulder_pos_y))
+                
+            
+        # Redraw lane lines
+        lane_art_count=WorldSize_px[0]//self.lane_line.get_width()-self.x
+        for i in range(self.lane_count-1):
+            lane_pos=i*self.lane_width-self.y+3*self.lane_width
+            # only draw the lines that would be visible (for speed)
+            if lane_pos<=self.y+self.height_px:
+                self.win.blit(self.lane_line,(0-self.x,lane_pos))
+
+                # for j in range(lane_art_count):
+                #     lane_art_pos=j*self.lane_line.get_width()-self.x
+                #     if lane_art_pos<self.x+self.width_px:
+                #         self.win.blit(self.lane_line,(lane_art_pos,lane_pos))
+                
 
 
         # Draw grass past shoulder (top)
-        if self.y<self.grass.get_height():
-            self.win.blit(self.grass,(0,0-self.y))
+        grass_count=WorldSize_px[0]//self.grass.get_width()
 
-            grass_count=WorldSize_px[0]//self.grass.get_width()
+        if self.y<self.grass.get_height():
+            # self.win.blit(self.grass,(0,0-self.y))
+            
             for i in range(grass_count):
                 grass_pos=i*self.grass.get_width()
                 if grass_pos<self.x+self.width_px:
@@ -74,21 +106,15 @@ class Window():
 
         # Draw grass past shoulder (bottom)
         if self.y+self.height_px>WorldSize_px[1]-self.grass.get_height():
-            self.win.blit(self.grass,(0,WorldSize_px[1]-self.grass.get_height()-self.y))
+            # self.win.blit(self.grass,(0,WorldSize_px[1]-self.grass.get_height()-self.y))
 
-            grass_count=WorldSize_px[0]//self.grass.get_width()
             for i in range(grass_count):
                 grass_pos=i*self.grass.get_width()
                 if grass_pos<self.x+self.width_px:
                     self.win.blit(self.grass,(grass_pos-self.x,WorldSize_px[1]-self.grass.get_height()-self.y))
 
 
-        # Redraw lane lines
-        for i in range(self.lane_count-1):
-            lane_pos=i*self.lane_width-self.y+3*self.lane_width
-            # only draw the lines that would be visible (for speed)
-            if lane_pos<=self.y+self.height_px:
-                self.win.blit(self.lane_line,(0-self.x,lane_pos))
+
 
         # Redraw all cars
         for sprite in game.all_sprites:
@@ -180,6 +206,7 @@ class World():
         game.orange_car.x=self.window.x+self.window.width_px//2
         game.orange_car.y=self.window.y+self.window.height_px//2
         game.orange_car.updateSpriteOrigin()
+
 
 
 

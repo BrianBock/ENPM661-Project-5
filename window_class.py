@@ -4,6 +4,8 @@ import math
 import numpy as np
 import pygame
 import random
+import cv2
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Patch
 
@@ -13,31 +15,62 @@ from trigfunctions import*
 from classes import car
 
 class Window():
-    def __init__(self,game):
-        
+    def __init__(self,game,WorldSize_px):
+        pygame.init()
         # Fixed width and height which do not ever change
-        self.width=1000
-        self.height=400
-        self.win = pygame.display.set_mode((self.width, self.height))
+        self.width_m=30 # meters
+        self.height_m=13 # meters
 
-        # Position of the upper left corner of the viewing window, in world coordinates; Moves with the orange car
-        self.x=500
-        self.y=500
+        self.width_px=self.width_m*game.pixpermeter
+        self.height_px=self.height_m*game.pixpermeter
+        self.win = pygame.display.set_mode((self.width_px, self.height_px))
 
 
-    def redrawGameWindow(self):
+        # Position of the upper left corner of the viewing window, in world coordinates (pix); Moves with the orange car
+        self.x=0
+        self.y=170
+        self.vel=10
+
+        # Import assets
+        self.lane_line = pygame.image.load('assets/lane_line_long.png')
+        self.solid_line = pygame.image.load('assets/solid_line.png')
+
+ 
+
+
+    def redrawGameWindow(self,game,WorldSize_px):
         # Redraw background
-        self.win.blit(self.bg, (int(self.bgX), 0))  # draws our first bg image
-        self.win.blit(self.bg, (int(self.bgX2), 0))  # draws the seconf bg image
+        self.win.fill((56,56,59))
+        
+
+        self.lane_width=90 # px
+        self.lane_count=4
+        
+        # Redraw shoulder lines
+        top_shoulder_pos=2*self.lane_width-self.y
+        bot_shoulder_pos=WorldSize_px[1]-2*self.lane_width-self.y
+            # only draw the lines that would be visible (for speed)
+        if top_shoulder_pos<=self.y+self.height_px:
+            self.win.blit(self.solid_line,(0-self.x,top_shoulder_pos))
+
+        if bot_shoulder_pos<=self.y+self.height_px:
+            self.win.blit(self.solid_line,(0-self.x,bot_shoulder_pos))
+
+        # Redraw lane lines
+        for i in range(self.lane_count-1):
+            lane_pos=i*self.lane_width-self.y+3*self.lane_width
+            # only draw the lines that would be visible (for speed)
+            if lane_pos<=self.y+self.height_px:
+                self.win.blit(self.lane_line,(0-self.x,lane_pos))
 
         # Redraw all cars
         for sprite in game.all_sprites:
             # only blit items on screen
                 # car is to the left of the window                car is to the right of the window         car is above window             car is below window
-            if (sprite.spritex+sprite.car_width_px<window.x) or (sprite.spritex>window.x+window.width) or (sprite.spritey<window.y) or (sprite.spritey+sprite.car_height_px>window.y+window.height):
+            if (sprite.spritex+sprite.car_width_px<self.x) or (sprite.spritex>self.x+self.width_px) or (sprite.spritey+sprite.car_height_px<self.y) or (sprite.spritey>self.y+self.height_px):
                 pass
             else:
-                self.win.blit(sprite.car_image_new,(int(sprite.spritex),int(sprite.spritey)))
+                self.win.blit(sprite.car_image_new,(int(sprite.spritex-self.x),int(sprite.spritey-self.y)))
 
         pygame.display.update()
 
@@ -46,18 +79,37 @@ class Window():
 class World():
     def __init__(self,game):
 
-        self.window=Window(game)
-        self.width=4000
-        self.height=1600
+        self.width_m=200 # meters
+        self.height_m=24 # meters
+
+        self.width_px=self.width_m*game.pixpermeter
+        self.height_px=self.height_m*game.pixpermeter
+
+        self.WorldSize_px=(self.width_px,self.height_px)
+
+        self.window=Window(game, self.WorldSize_px)
+
+        print
+
+        # self.width_px=4000
+        # self.height_px=1600
+
+
         self.generateBlueCars(game)
         self.generateGreenCars(game)
-        self.showWorldMap(game)
+        # self.showWorldMap(game)
+
+
+
+        # Create our car
+        game.orange_car=car(410,395,"protagonist")
+        game.all_sprites.add(game.orange_car)
 
 
     def generateBlueCars(self,game):
     # Create stationary cars
         print("Populating Blue cars")
-        start_pos_list=[(130,220),(200,330),(500,10)]
+        start_pos_list=[(130,220),(200,330),(500,200)]
 
         for start_pos in start_pos_list:
             x,y=start_pos
@@ -83,37 +135,66 @@ class World():
         # obst_list=[]
 
 
+    def moveWindow(self,keys,game):
+
+        if keys[pygame.K_LEFT] and self.window.x > self.window.vel: 
+            self.window.x -= self.window.vel
+
+        elif keys[pygame.K_RIGHT] and self.window.x < (self.width_px - self.window.vel - self.window.width_px):
+            self.window.x += self.window.vel
+
+        if keys[pygame.K_DOWN] and self.window.y <(self.height_px-self.window.vel-self.window.height_px):
+            self.window.y+=self.window.vel
+
+        elif keys[pygame.K_UP] and self.window.y > self.window.vel:
+            self.window.y-=self.window.vel
+
+        print(self.window.x,self.window.y)
+
+
+
+
     def showWorldMap(self,game):
         # plt.figure(1)
-        fig, ax = plt.subplots(1)
-        ax.set_xlim(0,self.width)
-        ax.set_ylim(0,self.height)
-        ax.invert_yaxis()
-        fig.title("World Map")
-        ax.grid()
-        ax.set_aspect('equal')
-
+        # plt.subplot(111)
+        # plt.axis([0, self.width_m, 0, self.height_m])
+        # matplotlib.axes.Axes.invert_yaxis()
+        # plt.title("World Map")
+        # plt.grid()
+        # # ax.set_aspect('equal')
+        worldMap=np.full((self.width_px,self.height_px,3),(255,255,255),np.uint8)
         # Draw all cars as rectangles
         for sprite in game.all_sprites:
-            a=Rectangle((sprite.spritex,sprite.spritey),sprite.car_width,sprite.car_height, fc=sprite.body_color, angle=sprite.theta,alpha=.5)
-            ax.add_patch(a)
+            worldMap=cv2.rectangle(worldMap,(sprite.spritex,sprite.spritey),(sprite.spritex+sprite.car_width,sprite.spritey+sprite.car_height),sprite.body_color,-1)
 
-        win_box=Rectangle((self.window.x,self.window.y),self.window.width,self.window.height,fill=None, ec='black', lw=3, angle=0)
-        ax.add_patch(win_box)
 
-        fig.show()
+            # a=Rectangle((sprite.spritex,sprite.spritey),sprite.car_width,sprite.car_height, fc=sprite.body_color, angle=sprite.theta,alpha=.5)
+            # ax.add_patch(a)
+        worldMap=cv2.rectangle(worldMap,(self.window.x,self.window.y),(self.window.x+self.window.width_px,self.window.y+self.window.height_px),(0,0,0),3)
+        # win_box=Rectangle(,self.window.width_m,self.window.height_m,fill=None, ec='black', lw=3, angle=0)
+        # ax.add_patch(win_box)
 
-        plt.figure(2)
-        plt.title("Window View")
-        fig2, ax2 = plt.subplots(1)
-        ax2.set_xlim(0,self.window.width)
-        ax2.set_ylim(0,self.window.height)
-        ax2.invert_yaxis()
-        ax2.grid()
-        ax2.set_aspect('equal')
-        fig2.show()
+        worldMap=cv2.resize(worldMap,(1000,400))
+        cv2.imshow("World Map",worldMap)
+        cv2.waitKey(0)
 
-        plt.show()
+        # fullWorld.show()
+
+        # viewWindow=plt.figure(2)
+        # plt.title("Window View")
+        # fig2, ax2 = plt.subplots(1)
+        # ax2.set_xlim(0,self.window.width_m)
+        # ax2.set_ylim(0,self.window.height_m)
+        # ax2.invert_yaxis()
+        # ax2.grid()
+        # ax2.set_xlabel('meters')
+        # ax2.set_ylabel('meters')
+
+        # # ax2.set_aspect('equal')
+        # viewWindow.show()
+
+
+        # plt.show()
     # def generateRandomObstacle(self):
     #     # print("Attempting to spawn a new blue car")
     #     randx=random.randint(1000,2000)
@@ -133,22 +214,22 @@ class car_game():
 
         self.road_speed=1.6
 
+        self.pixpermeter=30 #pixels/meter
+
         # Set up canvas
         self.clock = pygame.time.Clock()
         self.run = True
 
         # Set up background
-        self.bg = pygame.image.load('assets/road.png')
-        self.bgX = 0
-        self.bgX2 = self.bg.get_width()
+        # self.bg = pygame.image.load('assets/road.png')
+        # self.bgX = 0
+        # self.bgX2 = self.bg.get_width()
 
         self.all_sprites = pygame.sprite.Group()
         self.obst_list = pygame.sprite.Group()
         self.active_list=pygame.sprite.Group()
 
-        # Create our car
-        self.orange_car=car(10,225,"protagonist")
-        self.all_sprites.add(self.orange_car)
+
 
     
 

@@ -31,10 +31,14 @@ class Window():
         self.y=170
         self.vel=10
 
+        self.lane_width=90 # px
+
+
         # Import assets
         self.lane_line = pygame.image.load('assets/lane_line_long.png')
         self.solid_line = pygame.image.load('assets/solid_line.png')
-
+        self.grass = pygame.image.load('assets/grass.jpg')
+        self.grass = pygame.transform.scale(self.grass, (self.lane_width,self.lane_width))
  
 
 
@@ -43,7 +47,7 @@ class Window():
         self.win.fill((56,56,59))
         
 
-        self.lane_width=90 # px
+
         self.lane_count=4
         
         # Redraw shoulder lines
@@ -55,6 +59,18 @@ class Window():
 
         if bot_shoulder_pos<=self.y+self.height_px:
             self.win.blit(self.solid_line,(0-self.x,bot_shoulder_pos))
+
+
+        # Draw grass past shoulder
+        if self.y<self.grass.get_height():
+            self.win.blit(self.grass,(0,0-self.y))
+
+            grass_count=WorldSize_px[0]//self.grass.get_width()
+            for i in range(grass_count):
+                grass_pos=i*self.grass.get_width()
+                if grass_pos<self.x+self.width_px:
+                    self.win.blit(self.grass,(grass_pos-self.x,0-self.y))
+
 
         # Redraw lane lines
         for i in range(self.lane_count-1):

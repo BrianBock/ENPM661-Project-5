@@ -166,10 +166,14 @@ class World():
             # self.showWorldMap(game)
 
 
-
         # Create our car
+        print("Spawning our car")
         game.orange_car=car(410,395,"protagonist")
         game.all_sprites.add(game.orange_car)
+
+        print("All cars spawned.")
+
+
 
 
     def generateBlueCars(self,game,UserDefinedCars):
@@ -218,6 +222,7 @@ class World():
             greencar=car(randx,randy,"dynamic")
             game.active_list.add(greencar)
             game.all_sprites.add(greencar)
+        print("Done adding green cars")
         # tempcar.kill()
         # obst_list=[]
 

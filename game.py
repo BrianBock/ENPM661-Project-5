@@ -8,12 +8,13 @@ from window_class import Window, World, car_game
 
 
 
-manuallyAddCars=True
+manuallyAddCars=False
 
-
+print("Instantiating game")
 # Instantiate game
 game=car_game()
 
+print("Generating world")
 # Generate world
 world=World(game,manuallyAddCars)
 
@@ -78,7 +79,8 @@ while game.run:
             game.obst_list.add(new_obst)
             game.all_sprites.add(new_obst)
             bluecarlist.append(cursor_pos)
-        world.window.redrawGameWindow(game,world.WorldSize_px) 
+    
+    world.window.redrawGameWindow(game,world.WorldSize_px) 
         
 
     if keys[pygame.K_q]:

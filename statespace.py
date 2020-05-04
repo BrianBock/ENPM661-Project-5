@@ -20,8 +20,8 @@ class RoadMap:
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases
-        self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), (*self.sim2cart((-4,-4)),np.deg2rad(90)), (*self.sim2cart((4,4)),0) # 3D
-        # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
+        # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), (*self.sim2cart((-4,-4)),np.deg2rad(90)), (*self.sim2cart((4,4)),0) # 3D
+        self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
         
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
@@ -121,11 +121,11 @@ class RoadMap:
     def drawSegment(segment):
         X = list(map(lambda p: p[0], segment))
         Y = list(map(lambda p: p[1], segment))
-        plt.plot(X, Y, '-o', color='cyan', linewidth=0.5, markersize=1.5)
+        plt.plot(X, Y, '-o', color='cyan', linewidth=0.5, markersize=1, zorder=0)
 
     @staticmethod
     def scatter(X, Y):
-        plt.plot(X, Y, 'o', color='cyan', markersize=0.5, zorder=0)
+        plt.plot(X, Y, 'o', color='cyan', linewidth=0.5, markersize=0.5, zorder=0)
 
     ############################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -176,19 +176,20 @@ class RoadMap:
         return arrow
 
 class Tree:
-    def __init__(self, rootState):
-        self.nodes = [rootState]
+    def __init__(self, rootNode):
+        self.nodes = [rootNode] # robot states 
 
-    def add(self, state):
-        self.nodes.append(state)
+    def addEdge(self, existingNode, newNode):
+        newNode.parent = existingNode
+        self.nodes.append(newNode)
 
-    def nearestNeighbor(self, state):
+    def nearestNeighbor(self, randomState):
         minDistance = np.inf
-        for node in self.nodes:
-            distance = node.cost2go(state)
+        for state in self.nodes:
+            distance = state.cost2go(randomState)
             if distance < minDistance:
                 minDistance = distance
-                nearestNode = node
+                nearestNode = state
 
         return nearestNode
 

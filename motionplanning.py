@@ -11,7 +11,7 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, maxTreeSize=500, maxBranchSize=1, goalProbability=0.05):
+    def RRT(self, maxTreeSize=1000, maxBranchSize=1, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
 
@@ -26,7 +26,7 @@ class SamplingPlanner:
             if new is None:
                 continue
             if self._localPlanner(nearest, new) is not None: 
-                randomTree.add(new)
+                randomTree.addEdge(nearest, new)
                 if new.cost2go(goal, heuristic=euclidean) <= self.stateSpace.goalRadius:
                     solved = True
                     break 
@@ -34,6 +34,8 @@ class SamplingPlanner:
         exploredNodes = randomTree.nodes # for the visualization of path finding
         
         # Backtrack
+        if new is None:
+            new = randomTree.nearestNeighbor(goal)
         plan = _generatePlan(new)
         self._measureCost(plan)
     
@@ -41,9 +43,7 @@ class SamplingPlanner:
 
     @staticmethod
     def _localPlanner(nearestNode, newNode):
-        newNode.parent = nearestNode
-
-        # write trajectory planner here (currently straight-line)
+        # write trajectory (currently straight-line) planner here
 
         return True
 

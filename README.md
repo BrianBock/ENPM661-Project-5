@@ -5,6 +5,9 @@ A*, Dijkstra, BFS and DFS search algorithms are also supported.
 ## Setup
 1. Run the following command in the terminal: python autopilot.py
 
+## TODO
+Fix nearest neighbor function where it sometimes doesn't pick the closest node.
+
 ## Demo 
 The simulation was run using the following user inputs:  
 Robot Clearance: 0.1   

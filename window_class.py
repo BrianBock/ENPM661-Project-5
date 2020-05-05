@@ -241,6 +241,9 @@ class World():
         elif keys[pygame.K_UP] and self.window.y > self.window.vel:
             self.window.y-=self.window.vel
 
+        if keys[pygame.K_a]:
+            game.orange_car.turnCar(15)
+
         # print(self.window.x,self.window.y)
         game.orange_car.x=self.window.x+self.window.width_px//2
         game.orange_car.y=self.window.y+self.window.height_px//2

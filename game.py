@@ -5,7 +5,9 @@ import pickle
 # Import our own functions
 from classes import car
 from window_class import Window, World, car_game
-
+import statespace
+import motionplanning
+import logResults
 
 
 manuallyAddCars=False
@@ -38,6 +40,30 @@ game=car_game()
 print("Generating world")
 # Generate world
 world=World(game,manuallyAddCars)
+
+
+
+
+Map = statespace.RoadMap()
+planner = motionplanning.SamplingPlanner(Map)
+t0 = time()
+solved, plan, exploredNodes, _ = planner.RRT()
+t1 = time() 
+if solved: 
+    print(f'Path is found in {t1-t0} s\n')
+else:
+    print('Path not found')
+
+motionplanning.Simulation(Map, plan, exploredNodes)
+logResults(plan, Map) 
+
+
+
+
+
+
+
+
 
 
 

@@ -43,8 +43,7 @@ world=World(game,manuallyAddCars)
 
 
 
-
-Map = statespace.RoadMap()
+Map = statespace.RoadMap(game, world)
 planner = motionplanning.SamplingPlanner(Map)
 t0 = time()
 solved, plan, exploredNodes, _ = planner.RRT()

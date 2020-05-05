@@ -1,5 +1,9 @@
-# Specify filepatterns you want git to ignore.
+# Log Files
+plan.txt
 
-.DS_Store
+# Output Videos
+Simulation.mp4
 
-*_pycache_*
+# Visual Studio Code folders and files
+.vscode/
+__pycache__/

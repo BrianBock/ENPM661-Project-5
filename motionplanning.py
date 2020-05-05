@@ -11,7 +11,7 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, maxTreeSize=1000, maxBranchSize=1, goalProbability=0.05):
+    def RRT(self, maxTreeSize=500, maxBranchSize=1, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
 
@@ -34,7 +34,7 @@ class SamplingPlanner:
         exploredNodes = randomTree.nodes # for the visualization of path finding
         
         # Backtrack
-        if new is None:
+        if new is None or solved == False:
             new = randomTree.nearestNeighbor(goal)
         plan = _generatePlan(new)
         self._measureCost(plan)
@@ -230,24 +230,25 @@ def Simulation(stateSpace, plan, exploredNodes, step=1000):
         if size - i + 1 < step:
             step = size - i + 1
         for j in range(step):
-            # # Grid Planner
-            # x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
-            # stateSpace.scatter(x, y)
+            # Grid Planner
+            x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
+            stateSpace.scatter(x, y)
 
-            # Sampling Planner
-            branch = [exploredNodes[i+j].parent.state[:2], exploredNodes[i+j].state[:2]]
-            branch = list(map(stateSpace.cart2sim, branch))
-            stateSpace.drawSegment(branch)
+            # # Sampling Planner
+            # branch = [exploredNodes[i+j].parent.state[:2], exploredNodes[i+j].state[:2]]
+            # branch = list(map(stateSpace.cart2sim, branch))
+            # stateSpace.drawSegment(branch)
             
         stateSpace.drawCircle(robot_start, 'red')
         stateSpace.drawCircle(robot_goal, 'red')
 
         frame = _renderFrame(canvas, width, height)
         outputVideo.write(frame)
+        cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
         cv.imshow('Simulation', frame)
         if cv.waitKey(1) >= 0:
             break
-
+    cv.waitKey(0)
     # draw path
     robot = stateSpace.drawCircle(robot_start, 'yellow')
     for i in range(1, len(plan)):
@@ -259,6 +260,7 @@ def Simulation(stateSpace, plan, exploredNodes, step=1000):
 
         frame = _renderFrame(canvas, width, height)
         outputVideo.write(frame)
+        cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
         cv.imshow('Simulation', frame)
         if cv.waitKey(1) >= 0:
             break

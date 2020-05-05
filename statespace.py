@@ -20,8 +20,8 @@ class RoadMap:
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases
-        # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), (*self.sim2cart((-4,-4)),np.deg2rad(90)), (*self.sim2cart((4,4)),0) # 3D
-        self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
+        self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), (*self.sim2cart((-4,-4)),np.deg2rad(90)), (*self.sim2cart((4,4)),0) # 3D
+        # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
         
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
@@ -199,59 +199,59 @@ class Node:
         self.action = action # the action performed on the parent to produce this state
         self.parent = parent # previous node
         self.trajectory = [] # interpolated states from parent to child
-    
-    # # Differential Robot
-    # def neighbors(self, Map):    
-    #     adj = []
-    #     x, y, theta = self.state[0], self.state[1], self.state[2]  
-    #     slow, fast, r, L, dt = *Map.RPMs, Map.wheelRadius, Map.wheelsSeparation, Map.timeStep
 
-    #     # 8-connected action set
-    #     actions = [
-    #         (fast,fast),
-    #         (fast,slow),
-    #         (fast,0),
-    #         (slow,fast),
-    #         (slow,slow),
-    #         (slow,0),
-    #         (0,fast),
-    #         (0,slow),
-    #     ]
-
-    #     for action in actions:
-    #         ul, ur = action
-    #         x_next, y_next, theta_next = x, y, theta
-    #         for _ in range(Map.no_interpolations):
-    #             x_next += 0.5*r*(ur+ul)*np.cos(theta_next)*dt    
-    #             y_next += 0.5*r*(ur+ul)*np.sin(theta_next)*dt
-    #             theta_next += r/L*(ur-ul)*dt
-    #             if theta_next <= -np.pi:
-    #                 theta_next += 2*np.pi
-    #             if theta_next > np.pi:
-    #                 theta_next -= 2*np.pi   
-    #         edgeCost = np.sqrt((x_next-x)**2+(y_next-y)**2)    
-    #         adj.append(((x_next, y_next, theta_next), action, edgeCost))     
-
-    #     return [(Node(neighbor[0], neighbor[1]), neighbor[2]) for neighbor in adj if Map.contain(neighbor[0]) and Map.collisionAvoidance(neighbor[0])] 
-
-    # Unconstrained Robot
+        # # Differential Robot
     def neighbors(self, Map):    
         adj = []
-        x, y, theta = self.state[0], self.state[1], self.state[2]      
-        d = Map.stepSize
-        no_actions = 8
+        x, y, theta = self.state[0], self.state[1], self.state[2]  
+        slow, fast, r, L, dt = *Map.RPMs, Map.wheelRadius, Map.wheelsSeparation, Map.timeStep
 
-        # action set = {direction of movement defined as an angle}
-        actions = np.linspace(np.deg2rad(-180), np.deg2rad(180), no_actions, endpoint=True) 
+        # 8-connected action set
+        actions = [
+            (fast,fast),
+            (fast,slow),
+            (fast,0),
+            (slow,fast),
+            (slow,slow),
+            (slow,0),
+            (0,fast),
+            (0,slow),
+        ]
+
         for action in actions:
-            angle = theta + action # in radians
-            if angle <= -np.pi:
-                angle += 2*np.pi
-            if angle > np.pi:
-                angle -= 2*np.pi
-            adj.append(((x + d*np.cos(angle), y + d*np.sin(angle), angle), action))
+            ul, ur = action
+            x_next, y_next, theta_next = x, y, theta
+            for _ in range(Map.no_interpolations):
+                x_next += 0.5*r*(ur+ul)*np.cos(theta_next)*dt    
+                y_next += 0.5*r*(ur+ul)*np.sin(theta_next)*dt
+                theta_next += r/L*(ur-ul)*dt
+                if theta_next <= -np.pi:
+                    theta_next += 2*np.pi
+                if theta_next > np.pi:
+                    theta_next -= 2*np.pi   
+            edgeCost = np.sqrt((x_next-x)**2+(y_next-y)**2)    
+            adj.append(((x_next, y_next, theta_next), action, edgeCost))     
 
-        return [(Node(neighbor[0], neighbor[1]), Map.stepSize) for neighbor in adj if Map.contain(neighbor[0]) and Map.collisionAvoidance(neighbor[0])]
+        return [(Node(neighbor[0], neighbor[1]), neighbor[2]) for neighbor in adj if Map.contain(neighbor[0]) and Map.collisionAvoidance(neighbor[0])] 
+
+
+    # def neighbors(self, Map):    
+    #     adj = []
+    #     x, y, theta = self.state[0], self.state[1], self.state[2]      
+
+    #     # action set = {direction of movement defined as an angle}
+    #     no_actions=8
+    #     d = Map.stepSize
+    #     actions = np.linspace(np.deg2rad(-180), np.deg2rad(180), no_actions, endpoint=True) 
+    #     for action in actions:
+    #         angle = theta + action # in radians
+    #         if angle <= -np.pi:
+    #             angle += 2*np.pi
+    #         if angle > np.pi:
+    #             angle -= 2*np.pi
+    #         adj.append(((x + d*np.cos(angle), y + d*np.sin(angle), angle), action))
+
+    #     return [(Node(neighbor[0], neighbor[1]), Map.stepSize) for neighbor in adj if Map.contain(neighbor[0]) and Map.collisionAvoidance(neighbor[0])]
 
     def cost2go(self, other, heuristic=euclidean):
 

@@ -24,8 +24,8 @@ class RoadMap:
         self.offset, self.RPMs = self.robotRadius + 0.1, (1,2) # 3D
         # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
 
-        start=(0,int(world.height_px/2),0)
-        goal=(int(world.width_px-1.5*world.finish.get_width()),int(world.height_px/2))
+        start=(world.window.width_px/2+game.orange_car.car_width_px/2,world.height_px/2,0)
+        goal=(world.width_px-1.5*world.finish.get_width(), world.height_px/2)
 
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
@@ -80,9 +80,9 @@ class RoadMap:
         
         return (point[0]-self.width/2, point[1]-self.height/2)
 
-    def img2cart(self,point):
+    # def img2cart(self,point):
 
-        return (point[0],point[1])
+    #     return (point[0],point[1])
 
     def sample(self, goalProbability):
         # if random.randint(0,100) > goalProbability*100:
@@ -113,20 +113,20 @@ class RoadMap:
 
     ############################################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    def inCircle(self, point, parameters):
-        x, y = point[0], point[1]
-        # circle Parametrs
-        xc, yc, r = parameters
+    # def inCircle(self, point, parameters):
+    #     x, y = point[0], point[1]
+    #     # circle Parametrs
+    #     xc, yc, r = parameters
 
-        return (x-xc)**2 + (y-yc)**2 <= (r+self.offset)**2
+    #     return (x-xc)**2 + (y-yc)**2 <= (r+self.offset)**2
 
-    def drawCircle(self, parameters, color='blue'):
-        xc, yc, r = parameters
+    # def drawCircle(self, parameters, color='blue'):
+    #     xc, yc, r = parameters
 
-        circle = Circle((xc,yc), r, linewidth=0.5, color=color)
-        self.ax.add_artist(circle)
+    #     circle = Circle((xc,yc), r, linewidth=0.5, color=color)
+    #     self.ax.add_artist(circle)
 
-        return circle
+    #     return circle
 
     def inRectangle(self, point, obstacle):
         # Robot's current position
@@ -140,24 +140,24 @@ class RoadMap:
 
         return x_L <= x <= x_U and y_L <= y <= y_U
 
-    def drawPolygon(self, parameters):
-        if isinstance(parameters, tuple):
-            x_L, x_U, y_L, y_U = parameters
-            vertices = [(x_L,y_L), (x_U,y_L), (x_U,y_U), (x_L,y_U)]
-        else:
-            vertices = parameters       
+    # def drawPolygon(self, parameters):
+    #     if isinstance(parameters, tuple):
+    #         x_L, x_U, y_L, y_U = parameters
+    #         vertices = [(x_L,y_L), (x_U,y_L), (x_U,y_U), (x_L,y_U)]
+    #     else:
+    #         vertices = parameters       
 
-        polygon = Polygon(vertices, linewidth=0.5, color='blue')
-        self.ax.add_artist(polygon)
+    #     polygon = Polygon(vertices, linewidth=0.5, color='blue')
+    #     self.ax.add_artist(polygon)
 
-    def drawArrow(self, start, end, color='black'):
-        dx = end[0] - start[0]
-        dy = end[1] - start[1]
-        # arrow = plt.quiver(start[0], start[1], end[0], end[1], color=color, units = 'xy', scale = 5)
-        arrow = plt.arrow(start[0], start[1], dx, dy, color=color, length_includes_head=True, head_width=0.1, head_length=0.15)
-        self.ax.add_artist(arrow)
+    # def drawArrow(self, start, end, color='black'):
+    #     dx = end[0] - start[0]
+    #     dy = end[1] - start[1]
+    #     # arrow = plt.quiver(start[0], start[1], end[0], end[1], color=color, units = 'xy', scale = 5)
+    #     arrow = plt.arrow(start[0], start[1], dx, dy, color=color, length_includes_head=True, head_width=0.1, head_length=0.15)
+    #     self.ax.add_artist(arrow)
 
-        return arrow
+    #     return arrow
 
 class Tree:
     def __init__(self, rootNode):

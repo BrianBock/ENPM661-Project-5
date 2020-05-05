@@ -1,6 +1,7 @@
 # Import Python functions
 import pygame
 import pickle
+from time import time
 
 # Import our own functions
 from classes import car
@@ -41,19 +42,19 @@ print("Generating world")
 # Generate world
 world=World(game,manuallyAddCars)
 
-
-
+print("Generating roadmap for solver")
 Map = statespace.RoadMap(game, world)
-planner = motionplanning.SamplingPlanner(Map)
+print("Attempting to solve")
+planner = motionplanning.SamplingPlanner(Map,game)
 t0 = time()
-solved, plan, exploredNodes, _ = planner.RRT()
+solved, plan, exploredNodes, _ = planner.RRT(game)
 t1 = time() 
 if solved: 
-    print(f'Path is found in {t1-t0} s\n')
+    print(f'Path found in {t1-t0} s\n')
 else:
     print('Path not found')
 
-motionplanning.Simulation(Map, plan, exploredNodes)
+# motionplanning.Simulation(Map, plan, exploredNodes)
 logResults(plan, Map) 
 
 

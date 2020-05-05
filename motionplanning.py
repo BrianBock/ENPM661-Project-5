@@ -7,11 +7,11 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 import cv2 as cv
 
 class SamplingPlanner:
-    def __init__(self, stateSpace):
+    def __init__(self, stateSpace, game):
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, maxTreeSize=500, maxBranchSize=1, goalProbability=0.05):
+    def RRT(self, game, maxTreeSize=500, maxBranchSize=1, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
 
@@ -22,7 +22,7 @@ class SamplingPlanner:
         for _ in range(maxTreeSize):            
             sample = self.stateSpace.sample(goalProbability)
             nearest = randomTree.nearestNeighbor(sample)
-            new = nearest.stoppingState(self.stateSpace, sample, maxBranchSize) # new in direction of sample
+            new = nearest.stoppingState(self.stateSpace, sample, maxBranchSize, game) # new in direction of sample
             if new is None:
                 continue
             if self._localPlanner(nearest, new) is not None: 

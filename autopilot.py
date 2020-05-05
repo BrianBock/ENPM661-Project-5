@@ -5,16 +5,16 @@ from time import time
 
 def main():
     Map = statespace.RoadMap()
-    planner = motionplanning.GridPlanner(Map)
+    planner = motionplanning.SamplingPlanner(Map)
     t0 = time()
-    solved, plan, exploredNodes, _ = planner.Astar()
+    solved, plan, exploredNodes, _ = planner.RRT()
     t1 = time() 
     if solved: 
         print(f'Path is found in {t1-t0} s\n')
     else:
         print('Path not found')
     motionplanning.Simulation(Map, plan, exploredNodes)
-    logResults(plan, Map)
+    logResults(plan, Map)    
 
 def logResults(plan, Map):
     with open('plan.txt', 'w') as file:

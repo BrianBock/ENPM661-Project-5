@@ -138,7 +138,7 @@ class Window():
 
 class World():
     def __init__(self,game,ManuallyAddCars):
-        UserDefinedCars=False
+        UserDefinedCars=True
         self.width_m=200 # meters
         self.height_m=24 # meters
 
@@ -159,7 +159,7 @@ class World():
             for i in range (5,35):
                 self.generateRandomObstacle(game)
         
-        elif ManuallyAddCars and UserDefinedCars:
+        elif not ManuallyAddCars and UserDefinedCars:
             self.generateBlueCars(game,UserDefinedCars)
 
         self.generateGreenCars(game)

@@ -8,7 +8,7 @@ from window_class import Window, World, car_game
 
 
 
-manuallyAddCars=False
+manuallyAddCars=True
 
 print("Instantiating game")
 # Instantiate game
@@ -23,10 +23,21 @@ world=World(game,manuallyAddCars)
 
 
 if manuallyAddCars == True:
+    needCheck=True
     print("This is a building mode designed for picking the locations of the blue cars")
-    print("Use the arrow keys to move the window, and then select where you'd like the blue cars to go")
-    print("A blue car will appear where you have clicked, and it's location will be saved for later use")
-    print("When you are done, hit Q to save and exit. The next time you run, change 'manuallyAddCars' to False in game.py and 'userDefinedCars' to True in the World class")
+    while needCheck:
+        check=input("This mode will overwrite any previously saved blue car positions. Are you sure you want to continue? Type 'Yes' or 'No': ")
+        if check.lower()=="no" or check.lower()=='n':
+            print("Exiting")
+            needCheck=False
+            exit()
+        elif check.lower()=="yes" or check.lower()=='y':
+            needCheck=False
+            print("Use the arrow keys to move the window, and then select where you'd like the blue cars to go")
+            print("A blue car will appear where you have clicked, and it's location will be saved for later use")
+            print("When you are done, hit Q to save and exit. The next time you run, change 'manuallyAddCars' to False in game.py and 'userDefinedCars' to True in the World class")
+        else:
+            print("I didn't understand. Please try again.")
 
     bluecarlist=[]
 

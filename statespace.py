@@ -12,7 +12,7 @@ class RoadMap:
         self.width, self.height = 10, 10
         self.goalRadius = 0.2
         # robot parameters
-        self.robotRadius = game.orange_car.width_px//2
+        self.robotRadius = game.orange_car.car_width_px//2
         self.wheelRadius, self.wheelsSeparation = 0.066, 0.16 # differential
         self.stepSize = 0.5 # unconstrained
         ## trajectory parameters
@@ -25,7 +25,7 @@ class RoadMap:
         # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
 
         start=(world.window.width_px/2+game.orange_car.car_width_px/2,world.height_px/2,0)
-        goal=(world.width_px-1.5*world.finish.get_width(), world.height_px/2)
+        goal=(world.width_px-1.5*world.window.finish.get_width(), world.height_px/2)
 
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
@@ -273,7 +273,7 @@ class Node:
 
         return int(i/threshold*amplification)
 
-    def stoppingState(self, stateSpace, other, maxBranchSize):
+    def stoppingState(self, stateSpace, other, maxBranchSize,game):
         if self == other:
             newNode = None
         elif self.cost2go(other) <= maxBranchSize and stateSpace.collisionAvoidance(other.state):
@@ -284,7 +284,7 @@ class Node:
             dx = maxBranchSize / np.sqrt(1 + slope**2)
             dy = slope * dx
             newNode = Node((p1[0] + dx, p1[1] + dy))
-            if not stateSpace.collisionAvoidance(newNode.state):
+            if not stateSpace.collisionAvoidance(newNode.state,game):
                 newNode = None
 
         return newNode

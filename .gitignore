@@ -7,3 +7,5 @@ Simulation.mp4
 # Visual Studio Code folders and files
 .vscode/
 __pycache__/
+
+.DS_Store

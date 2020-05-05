@@ -8,19 +8,7 @@ from window_class import Window, World, car_game
 
 
 
-manuallyAddCars=True
-
-print("Instantiating game")
-# Instantiate game
-game=car_game()
-
-print("Generating world")
-# Generate world
-world=World(game,manuallyAddCars)
-
-
-
-
+manuallyAddCars=False
 
 if manuallyAddCars == True:
     needCheck=True
@@ -40,6 +28,18 @@ if manuallyAddCars == True:
             print("I didn't understand. Please try again.")
 
     bluecarlist=[]
+
+
+
+print("Instantiating game")
+# Instantiate game
+game=car_game()
+
+print("Generating world")
+# Generate world
+world=World(game,manuallyAddCars)
+
+
 
 
 # Run the game
@@ -81,11 +81,11 @@ while game.run:
     # Get cursor position for placing blue cars
         cursor=pygame.mouse.get_pos()
         click=pygame.mouse.get_pressed()
-        print(click)
+        # print(click)
         if click[0]==1:
             window_pos=(world.window.x,world.window.y)
             cursor_pos=(cursor[0]+window_pos[0],cursor[1]+window_pos[1])
-            print(cursor_pos)
+            # print(cursor_pos)
             new_obst=car(cursor_pos[0],cursor_pos[1],"obstacle")
             game.obst_list.add(new_obst)
             game.all_sprites.add(new_obst)
@@ -105,7 +105,7 @@ if manuallyAddCars:
 
     # Purge duplicates from long clicks
     bluecarlist=list(dict.fromkeys(bluecarlist))
-    print(bluecarlist)
+    # print(bluecarlist)
     with open('car_positions.data','wb') as filehandle:
         pickle.dump(bluecarlist,filehandle)
         print("Data saved")

@@ -20,8 +20,11 @@ class car(pygame.sprite.Sprite):
         self.theta=0
 
         # Car sprite dimensions
-        self.car_width_px=130 # total width of car (for bounding box)
-        self.car_height_px=70 # total height of car (for bounding box)
+        # self.car_width_px=130 # total width of car (for bounding box)
+        # self.car_height_px=70 # total height of car (for bounding box)
+
+        self.car_width_px=100 # total width of car (for bounding box)
+        self.car_height_px=60 # total height of car (for b
 
         # Physical car dimensions (meters)
         self.car_width = 5

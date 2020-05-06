@@ -34,7 +34,7 @@ class SamplingPlanner:
         exploredNodes = randomTree.nodes # for the visualization of path finding
         
         # Backtrack
-        if new is None or solved == False:
+        if solved == False:
             new = randomTree.nearestNeighbor(goal)
         plan = _generatePlan(new)
         self._measureCost(plan)
@@ -48,7 +48,7 @@ class SamplingPlanner:
         return True
 
     def _measureCost(self, plan):
-        for i in range(1,len(plan)):
+        for i in range(1, len(plan)):
             self._planCost += plan[i-1].cost2go(plan[i])
 
 class GridPlanner:

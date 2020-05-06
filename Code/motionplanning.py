@@ -222,7 +222,7 @@ def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
     Map = stateSpace.create(game)
     canvas = FigureCanvasAgg(Map)
     width, height = canvas.get_width_height()
-    outputVideo = cv.VideoWriter('Simulation.mp4', cv.VideoWriter_fourcc(*'XVID'), 30, (width, height))
+    outputVideo = cv.VideoWriter('../Simulation.mp4', cv.VideoWriter_fourcc(*'XVID'), 30, (width, height))
 
     # draw explored space
     size = len(exploredNodes) - 1

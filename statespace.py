@@ -80,6 +80,14 @@ class RoadMap:
         
         return (point[0]-self.width/2, point[1]-self.height/2)
 
+    def pixelToPoint(self, pixel):
+    ''' pixel (row, col) --> point (x, y) '''
+        return (pixel[1], self.height-1-pixel[0])
+
+    def pointToPixel(self, point):
+        ''' point (x, y) --> pixel (row, col) '''
+        return (self.height-1-point[1], point[0])
+
     # def img2cart(self,point):
 
     #     return (point[0],point[1])

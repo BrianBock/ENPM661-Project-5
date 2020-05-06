@@ -11,7 +11,7 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, game, maxTreeSize=500, maxBranchSize=1, goalProbability=0.05):
+    def RRT(self, game, maxTreeSize=10000, maxBranchSize=10, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
 
@@ -215,11 +215,11 @@ def _generatePlan(currentNode):
 
     return plan
 
-def Simulation(stateSpace, plan, exploredNodes, step=1000):
+def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
     robotSize_simulation = 0.15
     robot_start = (*stateSpace.cart2sim(stateSpace.start.state[:2]), robotSize_simulation)
     robot_goal = (*stateSpace.cart2sim(stateSpace.goal.state[:2]), robotSize_simulation)
-    Map = stateSpace.create()
+    Map = stateSpace.create(game)
     canvas = FigureCanvasAgg(Map)
     width, height = canvas.get_width_height()
     outputVideo = cv.VideoWriter('Simulation.mp4', cv.VideoWriter_fourcc(*'XVID'), 30, (width, height))

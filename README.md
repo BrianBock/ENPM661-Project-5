@@ -20,6 +20,40 @@ The program will solve a path from the start to goal. A matplotlib based visuali
     Python 3.8
 
 
+## Difficulty Modes
+The program has several difficulty modes, which can be selected by changing the value of `difficulty` in `game.py`. 
+
+
+
+### Easy
+Easy mode features a very short road and few obstacles. 
+
+![Easy Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Easy.png)
+
+
+
+### Medium
+
+![Medium Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Medium.png)
+
+
+
+### Hard
+
+![Hard Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Hard.png)
+
+## View Modes
+
+### Chaser View
+This mode fixes the camera frame to the orange car, and moves with it. The planner has access to the entire course, but the pygame visualizer only shows a portion of it at a time. This allows you to see the action up close and with more detail. This mode is the default. 
+
+### Sky View (PENDING)
+This mode fixes the camera frame to the entire track, and it does not move. This allows you to see the entire track at once, but it may be more difficult to see the finer details, especially on the longer courses. 
+
+### Photo Mode
+The program has an optional Photo Mode (accessible via a boolean toogle - `photoMode` in `game.py`) that takes a photo of the entire track at the start. This mode was used to create the track images for each of the difficulty modes above. Due to the way photoMode changes the viewing window and other crucial game elements, it is incompatiable with actual game function. 
+
+
 ## TODO
 Fix nearest neighbor function where it sometimes doesn't pick the closest node.
 

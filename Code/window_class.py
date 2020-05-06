@@ -137,9 +137,12 @@ class Window():
 
 
 class World():
-    def __init__(self,game,ManuallyAddCars):
+    def __init__(self,game,ManuallyAddCars,difficulty):
+
+        width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350}
         UserDefinedCars=True
-        self.width_m=200 # meters
+
+        self.width_m=width[difficulty] # meters
         self.height_m=24 # meters
 
         self.width_px=self.width_m*game.pixpermeter
@@ -160,7 +163,7 @@ class World():
                 self.generateRandomObstacle(game)
         
         elif not ManuallyAddCars and UserDefinedCars:
-            self.generateBlueCars(game,UserDefinedCars)
+            self.generateBlueCars(game,UserDefinedCars,difficulty)
 
         self.generateGreenCars(game)
             # self.showWorldMap(game)
@@ -176,14 +179,14 @@ class World():
 
 
 
-    def generateBlueCars(self,game,UserDefinedCars):
+    def generateBlueCars(self,game,UserDefinedCars,difficulty):
     # Create stationary cars
         print("Populating Blue cars")
         # start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408),(835,495),(1067,405),(1158,500)]
 
         start_pos_list=[]
         if UserDefinedCars:
-            with open('car_positions.data','rb') as filehandle:
+            with open('car_positions_'+difficulty+'.data','rb') as filehandle:
                 start_pos_list=pickle.load(filehandle)
                 print(start_pos_list)
 

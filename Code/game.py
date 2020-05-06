@@ -12,6 +12,7 @@ import logResults
 
 
 manuallyAddCars=False
+difficulty="Medium" #Medium, Hard, Extreme
 
 if manuallyAddCars == True:
     needCheck=True
@@ -40,22 +41,22 @@ game=car_game()
 
 print("Generating world")
 # Generate world
-world=World(game,manuallyAddCars)
+world=World(game,manuallyAddCars,difficulty)
 
-print("Generating roadmap for solver")
-Map = statespace.RoadMap(game, world)
-print("Attempting to solve")
-planner = motionplanning.SamplingPlanner(Map,game)
-t0 = time()
-solved, plan, exploredNodes, _ = planner.RRT(game)
-t1 = time() 
-if solved: 
-    print(f'Path found in {t1-t0} s\n')
-else:
-    print('Path not found')
+# print("Generating roadmap for solver")
+# Map = statespace.RoadMap(game, world)
+# print("Attempting to solve")
+# planner = motionplanning.SamplingPlanner(Map,game)
+# t0 = time()
+# solved, plan, exploredNodes, _ = planner.RRT(game)
+# t1 = time() 
+# if solved: 
+#     print(f'Path found in {t1-t0} s\n')
+# else:
+#     print('Path not found')
 
-motionplanning.Simulation(Map, game, plan, exploredNodes)
-# logResults(plan, Map) 
+# motionplanning.Simulation(Map, game, plan, exploredNodes)
+# # logResults(plan, Map) 
 
 
 
@@ -132,6 +133,6 @@ if manuallyAddCars:
     # Purge duplicates from long clicks
     bluecarlist=list(dict.fromkeys(bluecarlist))
     # print(bluecarlist)
-    with open('car_positions.data','wb') as filehandle:
+    with open('car_positions_'+difficulty+'.data','wb') as filehandle:
         pickle.dump(bluecarlist,filehandle)
         print("Data saved")

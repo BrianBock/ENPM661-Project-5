@@ -9,8 +9,9 @@ manhattan = lambda vector1, vector2: np.sum(np.absolute(np.array(vector1) - np.a
 class RoadMap:
     def __init__(self,game,world):
         # discretized space parameters
-        self.width, self.height = 10, 10
-        self.goalRadius = 0.2
+        self.width = world.width_px
+        self.height = world.height_px
+        self.goalRadius = 15#0.2
         # robot parameters
         self.robotRadius = game.orange_car.car_width_px//2
         self.wheelRadius, self.wheelsSeparation = 0.066, 0.16 # differential
@@ -43,24 +44,23 @@ class RoadMap:
     #     self.s2 = {'cart': (0.25,1.75,4.25,5.75), 'sim': (-4.75,-3.25,-0.75,0.75)}
     #     self.s3 = {'cart': (2.25,3.75,7.25,8.75), 'sim': (-2.75,-1.25,2.25,3.75)}
 
-    # def create(self):
-    #     figure = plt.figure()
-    #     self.ax = plt.axes(xlim=(-self.width/2,self.width/2), ylim=(-self.height/2,self.height/2))
-    #     self.ax.set_aspect('equal')
-    #     plt.xlabel('x')
-    #     plt.ylabel('y')
-    #     plt.title('Map')
-    #     # plt.grid()
+    def create(self,game):
+        figure = plt.figure()
+        self.ax = plt.axes(xlim=(-self.width/2,self.width/2), ylim=(-self.height/2,self.height/2))
+        self.ax.set_aspect('equal')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('Map')
+        # plt.grid()
 
-    #     self.drawCircle(self.c1['sim'])
-    #     self.drawCircle(self.c2['sim'])
-    #     self.drawCircle(self.c3['sim'])
-    #     self.drawCircle(self.c4['sim'])
-    #     self.drawPolygon(self.s1['sim'])
-    #     self.drawPolygon(self.s2['sim'])
-    #     self.drawPolygon(self.s3['sim'])
+        for obstacle in game.obst_list:
+            x_L = obstacle.spritex
+            x_U = x_L+obstacle.car_width_px
+            y_L = obstacle.spritey
+            y_U = y_L+obstacle.car_height_px
+            self.drawPolygon((x_L,x_U,y_L,y_U))
 
-    #     return figure
+        return figure
 
     def collisionAvoidance(self, state, game):
         p = state[:2]
@@ -120,13 +120,13 @@ class RoadMap:
 
     #     return (x-xc)**2 + (y-yc)**2 <= (r+self.offset)**2
 
-    # def drawCircle(self, parameters, color='blue'):
-    #     xc, yc, r = parameters
+    def drawCircle(self, parameters, color='blue'):
+        xc, yc, r = parameters
 
-    #     circle = Circle((xc,yc), r, linewidth=0.5, color=color)
-    #     self.ax.add_artist(circle)
+        circle = Circle((xc,yc), r, linewidth=0.5, color=color)
+        self.ax.add_artist(circle)
 
-    #     return circle
+        return circle
 
     def inRectangle(self, point, obstacle):
         # Robot's current position
@@ -140,24 +140,24 @@ class RoadMap:
 
         return x_L <= x <= x_U and y_L <= y <= y_U
 
-    # def drawPolygon(self, parameters):
-    #     if isinstance(parameters, tuple):
-    #         x_L, x_U, y_L, y_U = parameters
-    #         vertices = [(x_L,y_L), (x_U,y_L), (x_U,y_U), (x_L,y_U)]
-    #     else:
-    #         vertices = parameters       
+    def drawPolygon(self, parameters):
+        if isinstance(parameters, tuple):
+            x_L, x_U, y_L, y_U = parameters
+            vertices = [(x_L,y_L), (x_U,y_L), (x_U,y_U), (x_L,y_U)]
+        else:
+            vertices = parameters       
 
-    #     polygon = Polygon(vertices, linewidth=0.5, color='blue')
-    #     self.ax.add_artist(polygon)
+        polygon = Polygon(vertices, linewidth=0.5, color='blue')
+        self.ax.add_artist(polygon)
 
-    # def drawArrow(self, start, end, color='black'):
-    #     dx = end[0] - start[0]
-    #     dy = end[1] - start[1]
-    #     # arrow = plt.quiver(start[0], start[1], end[0], end[1], color=color, units = 'xy', scale = 5)
-    #     arrow = plt.arrow(start[0], start[1], dx, dy, color=color, length_includes_head=True, head_width=0.1, head_length=0.15)
-    #     self.ax.add_artist(arrow)
+    def drawArrow(self, start, end, color='black'):
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+        # arrow = plt.quiver(start[0], start[1], end[0], end[1], color=color, units = 'xy', scale = 5)
+        arrow = plt.arrow(start[0], start[1], dx, dy, color=color, length_includes_head=True, head_width=0.1, head_length=0.15)
+        self.ax.add_artist(arrow)
 
-    #     return arrow
+        return arrow
 
 class Tree:
     def __init__(self, rootNode):
@@ -276,7 +276,7 @@ class Node:
     def stoppingState(self, stateSpace, other, maxBranchSize,game):
         if self == other:
             newNode = None
-        elif self.cost2go(other) <= maxBranchSize and stateSpace.collisionAvoidance(other.state):
+        elif self.cost2go(other) <= maxBranchSize and stateSpace.collisionAvoidance(other.state,game):
             newNode = other
         else:
             p1, p2 = self.state, other.state

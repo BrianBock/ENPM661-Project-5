@@ -58,7 +58,7 @@ class Window():
     
 
 
-    def redrawGameWindow(self,game,WorldSize_px,difficulty):
+    def redrawGameWindow(self,game,WorldSize_px):
         # Redraw background
         self.win.fill((56,56,59))
 
@@ -145,19 +145,19 @@ class Window():
                 self.win.blit(sprite.car_image_new,(int(sprite.spritex-self.x),int(sprite.spritey-self.y)))
 
         if self.photoMode and self.needPhoto:
-            pygame.image.save(self.win,difficulty+'.png')
+            pygame.image.save(self.win,game.gameMode+'.png')
             self.needPhoto=False
         pygame.display.update()
 
 
 
 class World():
-    def __init__(self,game,ManuallyAddCars,difficulty,photoMode):
+    def __init__(self,game,ManuallyAddCars,photoMode):
 
-        width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350}
+        width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350,'Random':random.randint(75,350)}
         UserDefinedCars=True
 
-        self.width_m=width[difficulty] # meters
+        self.width_m=width[game.gameMode] # meters
         self.height_m=24 # meters
 
         self.width_px=self.width_m*game.pixpermeter
@@ -172,13 +172,14 @@ class World():
         # self.width_px=4000
         # self.height_px=1600
 
-        if ManuallyAddCars == False and UserDefinedCars == False:
+        # if ManuallyAddCars == False and UserDefinedCars == False:
+        if game.gameMode == 'Random':
             # self.generateBlueCars(game)
-            for i in range (5,35):
+            for i in range (5,random.randint(20,45)):
                 self.generateRandomObstacle(game)
         
         elif not ManuallyAddCars and UserDefinedCars:
-            self.generateBlueCars(game,UserDefinedCars,difficulty)
+            self.generateBlueCars(game,UserDefinedCars)
 
         if not self.window.photoMode:
             self.generateGreenCars(game)
@@ -199,14 +200,14 @@ class World():
 
 
 
-    def generateBlueCars(self,game,UserDefinedCars,difficulty):
+    def generateBlueCars(self,game,UserDefinedCars):
     # Create stationary cars
         print("Populating Blue cars")
         # start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408),(835,495),(1067,405),(1158,500)]
 
         start_pos_list=[]
         if UserDefinedCars:
-            with open('car_positions_'+difficulty+'.data','rb') as filehandle:
+            with open('car_positions_'+game.gameMode+'.data','rb') as filehandle:
                 start_pos_list=pickle.load(filehandle)
                 print(start_pos_list)
 
@@ -223,10 +224,11 @@ class World():
         lanes=[225,320,405,500]
         randy=random.choice(lanes)
         new_obst=car(randx,randy,"obstacle")
-        # a=pygame.sprite.spritecollide(car(randx,randy,"obstacle"), obst_list, True)
-        # print(a)
-        game.obst_list.add(new_obst)
-        game.all_sprites.add(new_obst)
+        if new_obst.spritex>self.width_px-400:
+            new_obst.kill()
+        else:
+            game.obst_list.add(new_obst)
+            game.all_sprites.add(new_obst)
 
         # return self.obst_list
 
@@ -323,10 +325,11 @@ class World():
 
 
 class car_game():
-    def __init__(self):
+    def __init__(self,gameMode):
         pygame.init()
+        self.gameMode=gameMode
 
-        self.road_speed=1.6
+        # self.road_speed=1.6
 
         self.pixpermeter=30 #pixels/meter
 

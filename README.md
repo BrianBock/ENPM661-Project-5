@@ -21,7 +21,7 @@ The program will solve a path from the start to goal. A matplotlib based visuali
 
 
 ## Difficulty Modes
-The program has several difficulty modes, which can be selected by changing the value of `difficulty` in `game.py`. 
+The program has several difficulty modes, which can be selected by changing the value of `gameMode` in `game.py`. 
 
 
 
@@ -41,6 +41,11 @@ Easy mode features a very short road and few obstacles.
 ### Hard
 
 ![Hard Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Hard1.png)
+
+
+### Random
+
+The other modes have the blue cars in carefully handpicked locations, placed for the right combination of difficulty and feasibility. They were all designed to be solvable, with at least one valid path. There is also a random mode, which generates a random number of blue cars in random locations on a road of random length. There is no check for or guarantee that the produced world will be solvable, but you're welcome to try it anyway. Change `gameMode` in `game.py` to "Random". 
 
 
 ## View Modes

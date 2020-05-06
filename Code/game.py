@@ -12,7 +12,7 @@ import logResults
 
 
 manuallyAddCars=False
-difficulty="Medium" #Medium, Hard, Extreme
+gameMode="Easy" #Easy, Medium, Hard, Extreme, Random
 photoMode=False
 
 if manuallyAddCars == True:
@@ -38,11 +38,11 @@ if manuallyAddCars == True:
 
 print("Instantiating game")
 # Instantiate game
-game=car_game()
+game=car_game(gameMode)
 
 print("Generating world")
 # Generate world
-world=World(game,manuallyAddCars,difficulty,photoMode)
+world=World(game,manuallyAddCars,photoMode)
 
 # print("Generating roadmap for solver")
 # Map = statespace.RoadMap(game, world)
@@ -119,7 +119,7 @@ while game.run:
             game.all_sprites.add(new_obst)
             bluecarlist.append(cursor_pos)
     
-    world.window.redrawGameWindow(game,world.WorldSize_px,difficulty) 
+    world.window.redrawGameWindow(game,world.WorldSize_px) 
         
 
     if keys[pygame.K_q]:

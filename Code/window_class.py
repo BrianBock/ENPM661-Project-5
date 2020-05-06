@@ -65,7 +65,7 @@ class Window():
         self.lane_count=4
         
         # Redraw shoulder lines
-        shoulder_count=WorldSize_px[0]//self.solid_line.get_width()
+        shoulder_count=WorldSize_px[0]//self.solid_line.get_width()+1
 
         top_shoulder_pos_y=2*self.lane_width-self.y
         top_shoulder_pos_x=0
@@ -92,7 +92,7 @@ class Window():
                 
             
         # Redraw lane lines
-        lane_art_count=WorldSize_px[0]//self.lane_line.get_width()
+        lane_art_count=WorldSize_px[0]//self.lane_line.get_width()+1
         for i in range(self.lane_count-1):
             lane_pos_y=i*self.lane_width-self.y+3*self.lane_width
             # only draw the lines that would be visible (for speed)

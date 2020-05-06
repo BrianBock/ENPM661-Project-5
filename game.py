@@ -54,8 +54,8 @@ if solved:
 else:
     print('Path not found')
 
-# motionplanning.Simulation(Map, plan, exploredNodes)
-logResults(plan, Map) 
+motionplanning.Simulation(Map, game, plan, exploredNodes)
+# logResults(plan, Map) 
 
 
 

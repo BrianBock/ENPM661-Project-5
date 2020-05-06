@@ -216,9 +216,9 @@ def _generatePlan(currentNode):
     return plan
 
 def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
-    robotSize_simulation = 0.15
-    robot_start = (*stateSpace.cart2sim(stateSpace.start.state[:2]), robotSize_simulation)
-    robot_goal = (*stateSpace.cart2sim(stateSpace.goal.state[:2]), robotSize_simulation)
+    robotSize_simulation = game.orange_car.car_width_px/2
+    robot_start = (*stateSpace.start.state[:2], robotSize_simulation)
+    robot_goal = (*stateSpace.goal.state[:2], robotSize_simulation)
     Map = stateSpace.create(game)
     canvas = FigureCanvasAgg(Map)
     width, height = canvas.get_width_height()
@@ -231,7 +231,8 @@ def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
             step = size - i + 1
         for j in range(step):
             # Grid Planner
-            x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
+            x,y=exploredNodes[i+j].state[:2]
+            # x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
             stateSpace.scatter(x, y)
 
             # # Sampling Planner

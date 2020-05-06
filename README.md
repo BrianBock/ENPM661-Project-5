@@ -2,24 +2,30 @@
 This project implements RRT trajectory planning for a car (non-holonomic robot) with steering as the only control input.  
 A\*, Dijkstra, BFS and DFS search algorithms are also supported.
 
-## Setup
-1. Run the following command in the terminal: `python autopilot.py`
-
-## TODO
-Fix nearest neighbor function where it sometimes doesn't pick the closest node.
+## How to Run
+Clone this entire repository. Make sure the directory you clone it to is one you have write access to, as several files are created while the program runs. Open Terminal and navigate to the Code directory. Type `python game.py`. If you have additional versions of Python installed, you may need to type `python3 game.py` instead. 
 
 ## Dependencies
     numpy
     cv2
     pickle
+    pygame
     random
     matplotlib
     collections
     heapq
     time
+    Python 3.8
 
-## How to Run
 
+## TODO
+Fix nearest neighbor function where it sometimes doesn't pick the closest node.
+
+
+
+
+## Sources and Additional Reading
+http://ckw.phys.ncku.edu.tw/public/pub/Notes/GeneralPhysics/Powerpoint/Extra/05/11_0_0_Steering_Theroy.pdf
 
 ## Graphic Sources
 

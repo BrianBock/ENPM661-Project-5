@@ -28,19 +28,20 @@ The program has several difficulty modes, which can be selected by changing the 
 ### Easy
 Easy mode features a very short road and few obstacles. 
 
-![Easy Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Easy.png)
+![Easy Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Easy1.png)
 
 
 
 ### Medium
 
-![Medium Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Medium.png)
+![Medium Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Medium1.png)
 
 
 
 ### Hard
 
-![Hard Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Hard.png)
+![Hard Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Hard1.png)
+
 
 ## View Modes
 

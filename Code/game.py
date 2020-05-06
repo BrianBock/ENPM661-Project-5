@@ -101,7 +101,7 @@ while game.run:
 
     # Move the orange car based on arrow keys
     keys = pygame.key.get_pressed()
-    world.moveWindow(keys,game)
+    # world.moveWindow(keys,game)
     # game.orange_car.moveCar(keys,(game.canvas_width,game.canvas_height))
     
 
@@ -119,6 +119,14 @@ while game.run:
             game.all_sprites.add(new_obst)
             bluecarlist.append(cursor_pos)
     
+
+    if game.orange_car.spritex<world.window.finish_line:
+        game.orange_car.moveCar(world,game)
+        print(game.orange_car.spritex,game.orange_car.spritey,game.orange_car.theta)
+
+    if 750<=game.orange_car.spritex<=800:
+        print("turn?")
+        game.orange_car.turnCar(-35)
     world.window.redrawGameWindow(game,world.WorldSize_px) 
         
 

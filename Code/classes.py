@@ -42,7 +42,7 @@ class car(pygame.sprite.Sprite):
             self.car_image = pygame.image.load('../assets/orange_car.png')
             self.body_color=(0,153,255,1)
             self.stationary=False
-            self.vel=12 #m/s
+            self.vel=5 #m/s
 
 
         if car_type == "obstacle":
@@ -89,28 +89,28 @@ class car(pygame.sprite.Sprite):
         return rot_image,rot_rect
 
 
-    def moveCar(self,keys,canvas_size):
-        canvas_width,canvas_height=canvas_size
+    # def moveCar(self,keys,canvas_size):
+    #     canvas_width,canvas_height=canvas_size
         
-        if keys[pygame.K_LEFT] and self.spritex > self.vel: 
-            self.spritex -= self.vel
+    #     if keys[pygame.K_LEFT] and self.spritex > self.vel: 
+    #         self.spritex -= self.vel
 
-        elif keys[pygame.K_RIGHT] and self.spritex < (canvas_width - self.vel - self.car_width):
-            self.spritex += self.vel
+    #     elif keys[pygame.K_RIGHT] and self.spritex < (canvas_width - self.vel - self.car_width):
+    #         self.spritex += self.vel
 
-        if keys[pygame.K_DOWN] and self.spritey <(canvas_height-self.vel-self.car_height):
-            self.spritey+=self.vel
+    #     if keys[pygame.K_DOWN] and self.spritey <(canvas_height-self.vel-self.car_height):
+    #         self.spritey+=self.vel
 
-        elif keys[pygame.K_UP] and self.spritey > self.vel:
-            self.spritey-=self.vel
+    #     elif keys[pygame.K_UP] and self.spritey > self.vel:
+    #         self.spritey-=self.vel
 
 
-        elif keys[pygame.K_a]:
-            self.turnCar(2)
-        elif keys[pygame.K_s]:
-            self.turnCar(-2)
+    #     elif keys[pygame.K_a]:
+    #         self.turnCar(2)
+    #     elif keys[pygame.K_s]:
+    #         self.turnCar(-2)
 
-        self.updateCarOrigin()
+    #     self.updateCarOrigin()
 
 
         #things to know about a node
@@ -125,6 +125,7 @@ class car(pygame.sprite.Sprite):
 
 
     def turnCar(self,wheel_angle):
+        print("Turning")
         R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
         # if wheel_angle<0:
         #     R*=-1
@@ -172,6 +173,38 @@ class car(pygame.sprite.Sprite):
         self.car_image_new = pygame.transform.rotate(self.car_image, theta)
         rect = self.car_image.get_rect()
 
+
+
+
+
+    def moveCar(self,world,game):
+
+        self.spritex+=self.vel*cosd(self.theta)
+        self.spritey-=self.vel*sind(self.theta)
+        self.updateCarOrigin()
+        world.updateWinPos(game)
+        
+        # # canvas_width,canvas_height=canvas_size
+
+        # if keys[pygame.K_LEFT] and self.spritex > self.vel: 
+        #     self.spritex -= self.vel
+
+        # elif keys[pygame.K_RIGHT] and self.spritex < (canvas_width - self.vel - self.car_width):
+        #     self.spritex += self.vel
+
+        # if keys[pygame.K_DOWN] and self.spritey <(canvas_height-self.vel-self.car_height):
+        #     self.spritey+=self.vel
+
+        # elif keys[pygame.K_UP] and self.spritey > self.vel:
+        #     self.spritey-=self.vel
+
+
+        # elif keys[pygame.K_a]:
+        #     self.turnCar(2)
+        # elif keys[pygame.K_s]:
+        #     self.turnCar(-2)
+
+        
 
 
 

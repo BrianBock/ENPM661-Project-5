@@ -39,7 +39,7 @@ class car(pygame.sprite.Sprite):
 
 
         if car_type == "protagonist":
-            self.car_image = pygame.image.load('assets/orange_car.png')
+            self.car_image = pygame.image.load('../assets/orange_car.png')
             self.body_color=(0,153,255,1)
             self.stationary=False
             self.vel=12 #m/s
@@ -47,13 +47,13 @@ class car(pygame.sprite.Sprite):
 
         if car_type == "obstacle":
             # car does not move
-            self.car_image = pygame.image.load('assets/blue_car.png')
+            self.car_image = pygame.image.load('../assets/blue_car.png')
             self.body_color=(255,0,0,1)
             self.stationary=True
 
         if car_type == "dynamic":
             # car moves by itself
-            self.car_image = pygame.image.load('assets/green_car.png')
+            self.car_image = pygame.image.load('../assets/green_car.png')
             self.body_color=(0,255,0,1)
             self.stationary=False
             self.vel=random.randint(1,6)

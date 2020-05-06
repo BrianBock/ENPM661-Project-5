@@ -36,12 +36,12 @@ class Window():
 
 
         # Import assets
-        self.lane_line = pygame.image.load('assets/lane_line_long.png')
-        self.solid_line = pygame.image.load('assets/solid_line.png')
-        self.grass = pygame.image.load('assets/grass.jpg')
+        self.lane_line = pygame.image.load('../assets/lane_line_long.png')
+        self.solid_line = pygame.image.load('../assets/solid_line.png')
+        self.grass = pygame.image.load('../assets/grass.jpg')
         self.grass = pygame.transform.scale(self.grass, (self.lane_width,self.lane_width))
  
-        self.finish = pygame.image.load('assets/finish_line2.png')
+        self.finish = pygame.image.load('../assets/finish_line2.png')
 
     
 

@@ -52,6 +52,9 @@ class Window():
         self.grass = pygame.transform.scale(self.grass, (self.lane_width,self.lane_width))
  
         self.finish = pygame.image.load('../assets/finish_line2.png')
+        self.finish_line=WorldSize_px[0]-1.5*self.finish.get_width() # x pos of the center of the finish line
+       
+        print(self.finish_line)
 
         if self.photoMode:
             self.needPhoto=True
@@ -129,9 +132,9 @@ class Window():
 
 
         # Draw finish line
-        if self.x+self.width_px>WorldSize_px[0]-2*self.finish.get_width():
+        if self.x+self.width_px>self.finish_line-.5*self.finish.get_width():
             # print("finish")
-            self.win.blit(self.finish,(WorldSize_px[0]-2*self.finish.get_width()-self.x,-self.y))
+            self.win.blit(self.finish,(self.finish_line-.5*self.finish.get_width()-self.x,-self.y))
 
 
 
@@ -276,8 +279,9 @@ class World():
             game.orange_car.updateSpriteOrigin()
 
 
-
-
+    def updateWinPos(self,game):
+            self.window.x=-self.window.width_px//2+game.orange_car.x
+            self.window.y=-self.window.height_px//2+game.orange_car.y
 
 
     def showWorldMap(self,game):

@@ -46,7 +46,7 @@ class RoadMap:
 
     def create(self,game):
         figure = plt.figure()
-        self.ax = plt.axes(xlim=(-self.width/2,self.width/2), ylim=(-self.height/2,self.height/2))
+        self.ax = plt.axes(xlim=(0,self.width), ylim=(0,self.height))
         self.ax.set_aspect('equal')
         plt.xlabel('x')
         plt.ylabel('y')
@@ -81,7 +81,7 @@ class RoadMap:
         return (point[0]-self.width/2, point[1]-self.height/2)
 
     def pixelToPoint(self, pixel):
-    ''' pixel (row, col) --> point (x, y) '''
+        ''' pixel (row, col) --> point (x, y) '''
         return (pixel[1], self.height-1-pixel[0])
 
     def pointToPixel(self, point):

@@ -16,20 +16,30 @@ from trigfunctions import*
 from classes import car
 
 class Window():
-    def __init__(self,game,WorldSize_px):
+    def __init__(self,game,WorldSize_px,photoMode):
         pygame.init()
         # Fixed width and height which do not ever change
         self.width_m=30 # meters
         self.height_m=13 # meters
 
-        self.width_px=self.width_m*game.pixpermeter
-        self.height_px=self.height_m*game.pixpermeter
+        self.photoMode=photoMode
+
+
+        if self.photoMode:
+            self.width_px=WorldSize_px[0]
+            self.height_px=WorldSize_px[1]
+        else:
+            self.width_px=self.width_m*game.pixpermeter
+            self.height_px=self.height_m*game.pixpermeter
         self.win = pygame.display.set_mode((self.width_px, self.height_px))
 
 
         # Position of the upper left corner of the viewing window, in world coordinates (pix); Moves with the orange car
         self.x=0
-        self.y=120
+        if self.photoMode:
+            self.y=0
+        else:
+            self.y=120
         self.vel=10
 
         self.lane_width=90 # px
@@ -43,10 +53,12 @@ class Window():
  
         self.finish = pygame.image.load('../assets/finish_line2.png')
 
+        if self.photoMode:
+            self.needPhoto=True
     
 
 
-    def redrawGameWindow(self,game,WorldSize_px):
+    def redrawGameWindow(self,game,WorldSize_px,difficulty):
         # Redraw background
         self.win.fill((56,56,59))
 
@@ -132,12 +144,15 @@ class Window():
             else:
                 self.win.blit(sprite.car_image_new,(int(sprite.spritex-self.x),int(sprite.spritey-self.y)))
 
+        if self.photoMode and self.needPhoto:
+            pygame.image.save(self.win,difficulty+'.png')
+            self.needPhoto=False
         pygame.display.update()
 
 
 
 class World():
-    def __init__(self,game,ManuallyAddCars,difficulty):
+    def __init__(self,game,ManuallyAddCars,difficulty,photoMode):
 
         width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350}
         UserDefinedCars=True
@@ -150,7 +165,7 @@ class World():
 
         self.WorldSize_px=(self.width_px,self.height_px)
 
-        self.window=Window(game, self.WorldSize_px)
+        self.window=Window(game, self.WorldSize_px,photoMode)
 
         print
 
@@ -165,13 +180,18 @@ class World():
         elif not ManuallyAddCars and UserDefinedCars:
             self.generateBlueCars(game,UserDefinedCars,difficulty)
 
-        self.generateGreenCars(game)
+        if not self.window.photoMode:
+            self.generateGreenCars(game)
             # self.showWorldMap(game)
 
 
         # Create our car
         print("Spawning our car")
-        game.orange_car=car(410,395,"protagonist")
+        if self.window.photoMode:
+            game.orange_car=car(440,320,"protagonist")
+        else:
+            game.orange_car=car(410,395,"protagonist")
+        
         game.all_sprites.add(game.orange_car)
 
         print("All cars spawned.")
@@ -248,9 +268,10 @@ class World():
             game.orange_car.turnCar(15)
 
         # print(self.window.x,self.window.y)
-        game.orange_car.x=self.window.x+self.window.width_px//2
-        game.orange_car.y=self.window.y+self.window.height_px//2
-        game.orange_car.updateSpriteOrigin()
+        if not self.window.photoMode:
+            game.orange_car.x=self.window.x+self.window.width_px//2
+            game.orange_car.y=self.window.y+self.window.height_px//2
+            game.orange_car.updateSpriteOrigin()
 
 
 

@@ -11,7 +11,7 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, maxTreeSize=500, maxBranchSize=1, goalProbability=0.05):
+    def RRT(self, maxTreeSize=1000, maxBranchSize=1, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
 
@@ -34,7 +34,7 @@ class SamplingPlanner:
         exploredNodes = randomTree.nodes # for the visualization of path finding
         
         # Backtrack
-        if new is None or solved == False:
+        if solved == False:
             new = randomTree.nearestNeighbor(goal)
         plan = _generatePlan(new)
         self._measureCost(plan)
@@ -48,8 +48,11 @@ class SamplingPlanner:
         return True
 
     def _measureCost(self, plan):
-        for i in range(1,len(plan)):
+        for i in range(1, len(plan)):
             self._planCost += plan[i-1].cost2go(plan[i])
+
+    def simulation(self, plan, exploredNodes, plannerType='Sampling', step=1000):
+        visualizePathFinding(self.stateSpace, plan, exploredNodes, plannerType, step)
 
 class GridPlanner:
     def __init__(self, stateSpace, positionResolution=0.05, angleResolution=45):
@@ -206,6 +209,9 @@ class GridPlanner:
 
         return (solved, plan, exploredNodes, planCost)
 
+    def simulation(self, plan, exploredNodes, plannerType='Grid', step=1000):
+        visualizePathFinding(self.stateSpace, plan, exploredNodes, plannerType, step)
+
 def _generatePlan(currentNode):
     plan = deque() # queue
     while (currentNode.parent is not None):
@@ -215,7 +221,7 @@ def _generatePlan(currentNode):
 
     return plan
 
-def Simulation(stateSpace, plan, exploredNodes, step=1000):
+def visualizePathFinding(stateSpace, plan, exploredNodes, plannerType, step):
     robotSize_simulation = 0.15
     robot_start = (*stateSpace.cart2sim(stateSpace.start.state[:2]), robotSize_simulation)
     robot_goal = (*stateSpace.cart2sim(stateSpace.goal.state[:2]), robotSize_simulation)
@@ -230,25 +236,23 @@ def Simulation(stateSpace, plan, exploredNodes, step=1000):
         if size - i + 1 < step:
             step = size - i + 1
         for j in range(step):
-            # Grid Planner
-            x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
-            stateSpace.scatter(x, y)
-
-            # # Sampling Planner
-            # branch = [exploredNodes[i+j].parent.state[:2], exploredNodes[i+j].state[:2]]
-            # branch = list(map(stateSpace.cart2sim, branch))
-            # stateSpace.drawSegment(branch)
+            if plannerType == 'Grid':
+                x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
+                stateSpace.scatter(x, y)
+            elif plannerType == 'Sampling':
+                branch = [exploredNodes[i+j].parent.state[:2], exploredNodes[i+j].state[:2]]
+                branch = list(map(stateSpace.cart2sim, branch))
+                stateSpace.drawSegment(branch)
             
         stateSpace.drawCircle(robot_start, 'red')
         stateSpace.drawCircle(robot_goal, 'red')
 
         frame = _renderFrame(canvas, width, height)
         outputVideo.write(frame)
-        cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
         cv.imshow('Simulation', frame)
         if cv.waitKey(1) >= 0:
             break
-    cv.waitKey(0)
+
     # draw path
     robot = stateSpace.drawCircle(robot_start, 'yellow')
     for i in range(1, len(plan)):
@@ -260,7 +264,6 @@ def Simulation(stateSpace, plan, exploredNodes, step=1000):
 
         frame = _renderFrame(canvas, width, height)
         outputVideo.write(frame)
-        cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
         cv.imshow('Simulation', frame)
         if cv.waitKey(1) >= 0:
             break

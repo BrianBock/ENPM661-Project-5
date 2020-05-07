@@ -21,7 +21,7 @@ class RoadMap:
         ## trajectory parameters
         self.uniformMotionDuration, self.no_interpolations = 3, 10
         self.timeStep = self.uniformMotionDuration / self.no_interpolations # dt
-        self.mergeDistance = 2
+        self.mergeDistance = 4*game.orange_car.car_width_px
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases
@@ -33,14 +33,14 @@ class RoadMap:
         self.verticalOffset = 20
         self.horizontalOffset = 20
 
-        start=(world.window.width_px/2+game.orange_car.car_width_px/2,world.height_px/2)
+        start=(410,408)
         goal=(world.width_px-1.5*world.window.finish.get_width(), world.height_px/2)
 
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
     #     self.defineObstacles()
 
-    def checkLane(self, waypoint, window):
+    def checkLane(self, waypoint):
         lane = [0,1,2,3] # from lower to upper 
         y = waypoint[1]
         if 180 <= y < 270:
@@ -75,6 +75,12 @@ class RoadMap:
         plt.ylabel('y')
         plt.title('Map')
         # plt.grid()
+
+        plt.plot((0,self.width), (270,270), color='yellow', linewidth=0.5)
+        plt.plot((0,self.width), (360,360), color='yellow', linewidth=0.5)
+        plt.plot((0,self.width), (450,450), color='yellow', linewidth=0.5)
+        plt.plot((0,self.width), (540,540), color='yellow', linewidth=0.5)
+       
 
         for obstacle in game.obst_list:
             x_L = obstacle.spritex

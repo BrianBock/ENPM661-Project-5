@@ -38,20 +38,12 @@ if solved:
 else:
     print('Path not found')
 
-
-# inObstacle = Map.inRectangle((5,5))
-
-motionplanning.Simulation(Map, game, plan, exploredNodes)
+motionplanning.Simulation(Map, game, plan, exploredNodes, planner)
 # # logResults(plan, Map) 
 
 
 
 
-
-
-
-
-# actions = planner.actionPlanner(plan) # L for left lane change, R for right lane change, number for seconds going straight
 
 # # for i in range(10):
 # #     act = random.randint(0,2)

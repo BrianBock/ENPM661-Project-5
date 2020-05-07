@@ -51,27 +51,32 @@ class SamplingPlanner:
     def actionPlanner(self, plan):
         actions = []
         mergeDistance = self.stateSpace.mergeDistance
-
-        x_start = plan[0][0]
-        previousLane = self.stateSpace.checkLane(plan[0])
+        mergePositions = []
+        x_start = plan[0].state[0]
+        previousLane = self.stateSpace.checkLane(plan[0].state)
         for i in range(1, len(plan)):
-            waypoint = plan[i]
+            waypoint = plan[i].state
             lane = self.stateSpace.checkLane(waypoint)
             if lane < previousLane:
-                previousWaypoint = plan[i-1]
+                previousWaypoint = plan[i-1].state
                 distance = previousWaypoint[0] - x_start
                 x_start = previousWaypoint[0] + mergeDistance
                 actions.append(distance)
                 actions.append('R')
+                print('R', previousWaypoint[0])
+                mergePositions.append(previousWaypoint[0])
             elif lane > previousLane:
-                previousWaypoint = plan[i-1]
+                previousWaypoint = plan[i-1].state
                 distance = previousWaypoint[0] - x_start
                 x_start = previousWaypoint[0] + mergeDistance
                 actions.append(distance)
                 actions.append('L')
+                print('L', previousWaypoint[0])
+                mergePositions.append(previousWaypoint[0])
+
             previousLane = lane
 
-        return actions
+        return (actions, mergePositions)
 
     def _measureCost(self, plan):
         for i in range(1, len(plan)):
@@ -241,7 +246,7 @@ def _generatePlan(currentNode):
 
     return plan
 
-def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
+def Simulation(stateSpace, game, plan, exploredNodes, planner, step=1000):
     robotSize_simulation = game.orange_car.car_width_px/2
     robot_start = (*stateSpace.start.state[:2], robotSize_simulation)
     robot_goal = (*stateSpace.goal.state[:2], robotSize_simulation)
@@ -291,6 +296,10 @@ def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
         robot = stateSpace.drawCircle((*currentState, robotSize_simulation), 'yellow')
 
         # _renderFrame(0, 0, 0)
+
+
+    actions, mergePositions = planner.actionPlanner(plan) # L for left lane change, R for right lane change, number for seconds going straight
+    print(actions)
 
     # plt.ioff()
     plt.show()

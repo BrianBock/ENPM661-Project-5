@@ -48,7 +48,7 @@ Easy mode features a very short road and few obstacles.
 The other modes have the blue cars in carefully handpicked locations, placed for the right combination of difficulty and feasibility. They were all designed to be solvable, with at least one valid path. There is also a random mode, which generates a random number of blue cars in random locations on a road of random length. There is no check for or guarantee that the produced world will be solvable, but you're welcome to try it anyway. Change `gameMode` in `game.py` to "Random". 
 
 ## World Builder
-Want to build your own track? You can! `worldbuilder.py` is a version of the game that lets you place blue cars wherever you want. Blue cars auto snap to the nearest lane midline so they are always centered on their lane. Use the arrow keys to move the camera around, and then left click where ever you want a car. There isn't an easy way to remove erronous cars, so be careful where you click. When you're done, hit 'Q' to save and exit. The next time you load the game with that difficulty mode, all of your cars will be where you placed them. You can also change the road length at the top of this file. 
+Want to build your own track? You can! `worldbuilder.py` is a version of the game that lets you place blue cars wherever you want. Make your own difficulty label, and then run the worldbuilder.  Use the arrow keys to move the camera around, and then left click where ever you want a car. Blue cars auto snap to the nearest lane midline so they are always centered on their lane. There isn't an easy way to remove erronous cars, so be careful where you click. When you're done, hit 'Q' to save and exit. The next time you load the game with that difficulty mode, all of your cars will be where you placed them. You can also change the road length at the top of this file. 
 
 
 ## View Modes
@@ -60,8 +60,7 @@ This mode fixes the camera frame to the orange car, and moves with it. The plann
 This mode fixes the camera frame to the entire track, and it does not move. This allows you to see the entire track at once, but it may be more difficult to see the finer details, especially on the longer courses. 
 
 ### Photo Mode
-The program has an optional Photo Mode (accessible by running `photo.py`) that takes a photo of the entire track at the start. This mode was used to create the track images for each of the difficulty modes above. Due to the way photoMode changes the viewing window and other crucial game elements, it is incompatible with actual game function. 
-
+The program has an optional Photo Mode (accessible by running `photo.py`) that takes a photo of the entire track at the start. This mode was used to create the track images for each of the difficulty modes above. Set the difficulty in `photo.py` to whichever course you want to take a photo off. The game will load, take a photo (saved to `world_files/difficulty.png`) and then quit. 
 
 ## TODO
 Fix nearest neighbor function where it sometimes doesn't pick the closest node.

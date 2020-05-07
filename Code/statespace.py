@@ -10,7 +10,9 @@ class RoadMap:
     def __init__(self,game,world):
         # discretized space parameters
         self.width = world.width_px
-        self.height = world.height_px
+        # self.width = 5000
+
+        self.height = world.height_px - 180 
         self.goalRadius = 15#0.2
         # robot parameters
         self.robotRadius = game.orange_car.car_width_px//2
@@ -23,17 +25,22 @@ class RoadMap:
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases
-        self.offset, self.RPMs = self.robotRadius + 0.1, (1,2) # 3D
+        # self.offset, self.RPMs = self.robotRadius + 0.1, (1,2) # 3D
         # self.offset, self.RPMs, start, goal = self.robotRadius + 0.1, (1,2), self.sim2cart((-4,-4)), self.sim2cart((4,4)) # 2D
 
-        start=(world.window.width_px/2+game.orange_car.car_width_px/2,world.height_px/2,0)
+        # self.horizontalOffset = 2*game.orange_car.car_width_px
+        # self.verticalOffset = 45 - game.orange_car.car_height_px/2 + 5
+        self.verticalOffset = 200
+        self.horizontalOffset = 200
+
+        start=(world.window.width_px/2+game.orange_car.car_width_px/2,world.height_px/2)
         goal=(world.width_px-1.5*world.window.finish.get_width(), world.height_px/2)
 
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
     #     self.defineObstacles()
 
-    def checkLane(self, waypoint):
+    def checkLane(self, waypoint, window):
         lane = {'middle': 0, 'right': -1, 'left': 1}
         y = waypoint[1]
         if 0 <= y < 2:
@@ -58,8 +65,9 @@ class RoadMap:
     #     self.s3 = {'cart': (2.25,3.75,7.25,8.75), 'sim': (-2.75,-1.25,2.25,3.75)}
 
     def create(self,game):
-        figure = plt.figure()
-        self.ax = plt.axes(xlim=(0,self.width), ylim=(0,self.height))
+        figure = plt.figure(figsize=(12,1))
+        self.ax = plt.axes(xlim=(0,self.width), ylim=(180,self.height))
+        plt.gca().invert_yaxis()
         self.ax.set_aspect('equal')
         plt.xlabel('x')
         plt.ylabel('y')
@@ -71,7 +79,9 @@ class RoadMap:
             x_U = x_L+obstacle.car_width_px
             y_L = obstacle.spritey
             y_U = y_L+obstacle.car_height_px
-            self.drawPolygon((x_L,x_U,y_L,y_U))
+            # p1 = tuple(map(self.pixelToPoint, (x_L, y_L)))
+            # p2 = tuple(map(self.pixelToPoint, (x_U, y_U)))
+            self.drawPolygon((x_L, x_U, y_L, y_U))
 
         return figure
 
@@ -108,7 +118,7 @@ class RoadMap:
     def sample(self, goalProbability):
         # if random.randint(0,100) > goalProbability*100:
         if random.random() > goalProbability:
-            return Node((random.uniform(0, self.width), random.uniform(0, self.height)))
+            return Node((random.uniform(self.start.state[0], self.width), random.uniform(180, self.height)))
         else:
             return self.goal
 
@@ -122,8 +132,9 @@ class RoadMap:
 
         return self.height-offset <= y or y <= offset or self.width-offset <= x or x <= offset
 
-    @staticmethod
-    def drawSegment(segment):
+    # @staticmethod
+    def drawSegment(self, segment):
+        # p (x,y) in image coords
         X = list(map(lambda p: p[0], segment))
         Y = list(map(lambda p: p[1], segment))
         plt.plot(X, Y, '-o', color='cyan', linewidth=0.5, markersize=1, zorder=0)
@@ -141,6 +152,14 @@ class RoadMap:
 
     #     return (x-xc)**2 + (y-yc)**2 <= (r+self.offset)**2
 
+    def pixelToPoint(self, pixel):
+        ''' pixel (row, col) --> point (x, y) '''
+        return (pixel[0], self.height-pixel[1])
+
+    def pointToPixel(self, point):
+        ''' point (x, y) --> pixel(row, col) '''
+        return (self.height-point[1], point[0])
+
     def drawCircle(self, parameters, color='blue'):
         xc, yc, r = parameters
 
@@ -151,13 +170,13 @@ class RoadMap:
 
     def inRectangle(self, point, obstacle):
         # Robot's current position
-        x, y = point[0], point[1]
+        x, y = point[0], point[1] # (col, row)
         
         # rectangle parameters
-        x_L = obstacle.spritex-self.offset
-        x_U = x_L+obstacle.car_width_px+self.offset
-        y_L = obstacle.spritey-self.offset
-        y_U = y_L+obstacle.car_height_px+self.offset
+        x_L = obstacle.spritex-self.horizontalOffset
+        x_U = obstacle.spritex+obstacle.car_width_px+self.horizontalOffset
+        y_L = obstacle.spritey-self.verticalOffset
+        y_U = obstacle.spritey+obstacle.car_height_px+self.verticalOffset
 
         return x_L <= x <= x_U and y_L <= y <= y_U
 

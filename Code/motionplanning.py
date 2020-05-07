@@ -4,6 +4,7 @@ import numpy as np
 from statespace import Tree, euclidean, manhattan
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg
+import matplotlib.pyplot as plt 
 import cv2 as cv
 
 class SamplingPlanner:
@@ -11,10 +12,10 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, game, maxTreeSize=10000, maxBranchSize=10, goalProbability=0.05):
+    def RRT(self, game, maxTreeSize=2000, maxBranchSize=50, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
-
+        # maxBranchSize = game.orange_car.car_height_px
         start, goal = self.stateSpace.start, self.stateSpace.goal
 
         # Forward Search
@@ -245,9 +246,9 @@ def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
     robot_start = (*stateSpace.start.state[:2], robotSize_simulation)
     robot_goal = (*stateSpace.goal.state[:2], robotSize_simulation)
     Map = stateSpace.create(game)
-    canvas = FigureCanvasAgg(Map)
-    width, height = canvas.get_width_height()
-    outputVideo = cv.VideoWriter('../Simulation.mp4', cv.VideoWriter_fourcc(*'XVID'), 30, (width, height))
+    # canvas = FigureCanvasAgg(Map)
+    # width, height = canvas.get_width_height()
+    # outputVideo = cv.VideoWriter('../Simulation.mp4', cv.VideoWriter_fourcc(*'XVID'), 30, (width, height))
 
     # draw explored space
     size = len(exploredNodes) - 1
@@ -256,45 +257,58 @@ def Simulation(stateSpace, game, plan, exploredNodes, step=1000):
             step = size - i + 1
         for j in range(step):
             # Grid Planner
-            x,y=exploredNodes[i+j].state[:2]
-            # x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
-            stateSpace.scatter(x, y)
+            # x,y=exploredNodes[i+j].state[:2]
+            # # x, y = stateSpace.cart2sim(exploredNodes[i+j].state[:2])
+            # stateSpace.scatter(x, y)
 
             # # Sampling Planner
-            # branch = [exploredNodes[i+j].parent.state[:2], exploredNodes[i+j].state[:2]]
-            # branch = list(map(stateSpace.cart2sim, branch))
-            # stateSpace.drawSegment(branch)
+            branch = [exploredNodes[i+j].parent.state[:2], exploredNodes[i+j].state[:2]]
+            # branch = list(map(stateSpace.pointToPixel, branch))
+            stateSpace.drawSegment(branch)
             
         stateSpace.drawCircle(robot_start, 'red')
         stateSpace.drawCircle(robot_goal, 'red')
 
-        frame = _renderFrame(canvas, width, height)
-        outputVideo.write(frame)
-        cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
-        cv.imshow('Simulation', frame)
-        if cv.waitKey(1) >= 0:
-            break
-    cv.waitKey(0)
+
+
+        # _renderFrame(0, 0, 0)
+
+        # frame = _renderFrame(0, 0, 0)
+        # outputVideo.write(frame)
+        # cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
+        # cv.imshow('Simulation', frame)
+        # if cv.waitKey(1) >= 0:
+        #     break
+
     # draw path
     robot = stateSpace.drawCircle(robot_start, 'yellow')
     for i in range(1, len(plan)):
         robot.remove()
         consecutiveStates = (plan[i-1].state[:2], plan[i].state[:2])
-        previousState, currentState = tuple(map(stateSpace.cart2sim, consecutiveStates))
+        # previousState, currentState = tuple(map(stateSpace.pixelToPoint, consecutiveStates))
+        previousState, currentState = consecutiveStates
         stateSpace.drawArrow(previousState, currentState, 'black')
         robot = stateSpace.drawCircle((*currentState, robotSize_simulation), 'yellow')
 
-        frame = _renderFrame(canvas, width, height)
-        outputVideo.write(frame)
-        cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
-        cv.imshow('Simulation', frame)
-        if cv.waitKey(1) >= 0:
-            break
+        # _renderFrame(0, 0, 0)
 
-    cv.waitKey(0)
+    # plt.ioff()
+    plt.show()
+
+        # frame = _renderFrame(0, 0, 0)
+        # outputVideo.write(frame)
+        # cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
+        # cv.imshow('Simulation', frame)
+        # if cv.waitKey(1) >= 0:
+        #     break
+
+    # cv.waitKey(0)
 
 def _renderFrame(canvas, width, height):
-    canvas.draw()
-    frame = np.frombuffer(canvas.tostring_rgb(), dtype=np.uint8).reshape((height, width, 3))
+    # canvas.draw()
+    # frame = np.frombuffer(canvas.tostring_rgb(), dtype=np.uint8).reshape((height, width, 3))
+    plt.ion()
+    plt.draw()
+    plt.pause(0.001)
 
-    return cv.cvtColor(frame, cv.COLOR_RGB2BGR)
+    # return cv.cvtColor(frame, cv.COLOR_RGB2BGR)

@@ -17,6 +17,7 @@ class RoadMap:
         ## trajectory parameters
         self.uniformMotionDuration, self.no_interpolations = 3, 10
         self.timeStep = self.uniformMotionDuration / self.no_interpolations # dt
+        self.mergeDistance = 2
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases
@@ -26,6 +27,18 @@ class RoadMap:
         # obstacles' parameters
         self.defineObstacles()
 
+    def checkLane(self, waypoint):
+        lane = {'middle': 0, 'right': -1, 'left': 1}
+        y = waypoint[1]
+        if 0 <= y < 2:
+            return lane['right']
+        elif 2 <= y < 4:
+            return lane['middle']
+        elif 4 <= y < 6:
+            return lane['left'] 
+        else:
+            return None
+        
     def userInput(self):
         while True:
             clearance = float(input('Please enter a valid clearance c of the robot (c = 0 if point robot):\n'))

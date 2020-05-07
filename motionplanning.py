@@ -44,8 +44,33 @@ class SamplingPlanner:
     @staticmethod
     def _localPlanner(nearestNode, newNode):
         # trajectory (straight-line) planner
-
+        
         return True
+
+    def actionPlanner(self, plan):
+        actions = []
+        mergeDistance = self.stateSpace.mergeDistance
+
+        x_start = plan[0][0]
+        previousLane = self.stateSpace.checkLane(plan[0])
+        for i in range(1, len(plan)):
+            waypoint = plan[i]
+            lane = self.stateSpace.checkLane(waypoint)
+            if lane < previousLane:
+                previousWaypoint = plan[i-1]
+                distance = previousWaypoint[0] - x_start
+                x_start = previousWaypoint[0] + mergeDistance
+                actions.append(distance)
+                actions.append('R')
+            elif lane > previousLane:
+                previousWaypoint = plan[i-1]
+                distance = previousWaypoint[0] - x_start
+                x_start = previousWaypoint[0] + mergeDistance
+                actions.append(distance)
+                actions.append('L')
+            previousLane = lane
+
+        return actions
 
     def _measureCost(self, plan):
         for i in range(1, len(plan)):

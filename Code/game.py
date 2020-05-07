@@ -12,28 +12,9 @@ import statespace
 import motionplanning
 import logResults
 
-manuallyAddCars=False
 difficulty="Easy" #Easy, Medium, Hard, Extreme, Random
 photoMode=False
 
-if manuallyAddCars == True:
-    needCheck=True
-    print("This is a building mode designed for picking the locations of the blue cars")
-    while needCheck:
-        check=input("This mode will overwrite any previously saved blue car positions. Are you sure you want to continue? Type 'Yes' or 'No': ")
-        if check.lower()=="no" or check.lower()=='n':
-            print("Exiting")
-            needCheck=False
-            exit()
-        elif check.lower()=="yes" or check.lower()=='y':
-            needCheck=False
-            print("Use the arrow keys to move the window, and then select where you'd like the blue cars to go")
-            print("A blue car will appear where you have clicked, and it's location will be saved for later use")
-            print("When you are done, hit Q to save and exit. The next time you run, change 'manuallyAddCars' to False in game.py and 'userDefinedCars' to True in the World class")
-        else:
-            print("I didn't understand. Please try again.")
-
-    bluecarlist=[]
 
 print("Starting game")
 game=car_game(difficulty) # Instantiate game
@@ -120,18 +101,6 @@ while game.run:
             game.orange_car.turnCar(angle)
         else:
             busy = False
-    
-    if manuallyAddCars:
-    # Get cursor position for placing blue cars
-        cursor=pygame.mouse.get_pos()
-        click=pygame.mouse.get_pressed()
-        if click[0]==1:
-            window_pos=(world.window.x,world.window.y)
-            cursor_pos=(cursor[0]+window_pos[0],cursor[1]+window_pos[1])
-            new_obst=car(cursor_pos[0],cursor_pos[1],"obstacle")
-            game.obst_list.add(new_obst)
-            game.all_sprites.add(new_obst)
-            bluecarlist.append(cursor_pos)
 
     world.updateWinPos(game)
     world.window.redrawGameWindow(game,world.WorldSize_px) 
@@ -141,13 +110,3 @@ while game.run:
         game.run=False
 
 pygame.quit()
-
-if manuallyAddCars:
-    print("Saving data")
-
-    # Purge duplicates from long clicks
-    bluecarlist=list(dict.fromkeys(bluecarlist))
-    # print(bluecarlist)
-    with open('car_positions_'+difficulty+'.data','wb') as filehandle:
-        pickle.dump(bluecarlist,filehandle)
-        print("Data saved")

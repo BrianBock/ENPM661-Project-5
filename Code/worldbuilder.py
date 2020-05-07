@@ -4,6 +4,9 @@ import pickle
 from time import time
 import math
 import random
+import os
+import os.path
+from os import path
 
 # Import our own functions
 from classes.car_class import car
@@ -37,6 +40,14 @@ while needCheck:
         print("I didn't understand. Please try again.")
 
 bluecarlist=[]
+
+car_pos_path = 'world_files/car_positions_'+difficulty+'.data'
+length_path = 'world_files/road_length_'+difficulty+'.data'
+
+if path.exists(car_pos_path):
+    os.remove(car_pos_path)
+if path.exists(length_path):
+    os.remove(length_path)
 
 print("Starting game")
 game=car_game(difficulty) # Instantiate game
@@ -106,8 +117,8 @@ print("Saving data")
 # Purge duplicates from long clicks
 bluecarlist=list(dict.fromkeys(bluecarlist))
 # print(bluecarlist)
-with open('world_files/car_positions_'+difficulty+'.data','wb') as filehandle:
+with open(car_pos_path,'wb') as filehandle:
     pickle.dump(bluecarlist,filehandle)
     print("Data saved")
-with open('world_files/road_length_'+difficulty+'.data','wb') as filehandle:
+with open(length_path,'wb') as filehandle:
     pickle.dump(road_length,filehandle)

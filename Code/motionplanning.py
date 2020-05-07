@@ -12,7 +12,7 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, game, maxTreeSize=10000, maxBranchSize=50, goalProbability=0.05):
+    def RRT(self, game, maxTreeSize=10000, maxBranchSize=25, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
         # maxBranchSize = game.orange_car.car_height_px
@@ -63,16 +63,16 @@ class SamplingPlanner:
                 x_start = previousWaypoint[0] + mergeDistance
                 actions.append(distance)
                 actions.append('R')
-                print('R', previousWaypoint[0])
-                mergePositions.append(previousWaypoint[0])
+                # print('R', previousWaypoint[0])
+                mergePositions.append(('R',previousWaypoint[0]))
             elif lane > previousLane:
                 previousWaypoint = plan[i-1].state
                 distance = previousWaypoint[0] - x_start
                 x_start = previousWaypoint[0] + mergeDistance
                 actions.append(distance)
                 actions.append('L')
-                print('L', previousWaypoint[0])
-                mergePositions.append(previousWaypoint[0])
+                # print('L', previousWaypoint[0])
+                mergePositions.append(('L',previousWaypoint[0]))
 
             previousLane = lane
 
@@ -299,19 +299,18 @@ def Simulation(stateSpace, game, plan, exploredNodes, planner, step=1000):
 
 
     actions, mergePositions = planner.actionPlanner(plan) # L for left lane change, R for right lane change, number for seconds going straight
-    print(actions)
+    # print(actions)
 
-    # plt.ioff()
     plt.show()
 
-        # frame = _renderFrame(0, 0, 0)
-        # outputVideo.write(frame)
-        # cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
-        # cv.imshow('Simulation', frame)
-        # if cv.waitKey(1) >= 0:
-        #     break
+    return mergePositions
 
-    # cv.waitKey(0)
+    # frame = _renderFrame(0, 0, 0)
+    # outputVideo.write(frame)
+    # cv.namedWindow('Simulation', cv.WINDOW_NORMAL)
+    # cv.imshow('Simulation', frame)
+    # if cv.waitKey(1) >= 0:
+    #     break
 
 def _renderFrame(canvas, width, height):
     # canvas.draw()

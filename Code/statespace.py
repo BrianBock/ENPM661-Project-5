@@ -21,7 +21,7 @@ class RoadMap:
         ## trajectory parameters
         self.uniformMotionDuration, self.no_interpolations = 3, 10
         self.timeStep = self.uniformMotionDuration / self.no_interpolations # dt
-        self.mergeDistance = 4*game.orange_car.car_width_px
+        self.mergeDistance = 6*game.orange_car.car_width_px
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases

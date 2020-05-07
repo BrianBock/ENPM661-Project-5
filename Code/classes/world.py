@@ -73,7 +73,7 @@ class World():
         if os.path.exists(filepath):
             with open('world_files/car_positions_'+game.gameMode+'.data','rb') as filehandle:
                 start_pos_list=pickle.load(filehandle)
-                print(start_pos_list)
+                # print(start_pos_list)
 
         for start_pos in start_pos_list:
             x,y=start_pos

@@ -190,7 +190,7 @@ class Tree:
                 minDistance = distance
                 nearestNode = state
 
-        return nearestNode
+        return (nearestNode, minDistance)
 
 class Node:
     def __init__(self, state, action=None, parent=None):
@@ -288,20 +288,19 @@ class Node:
 
         return int(i/threshold*amplification)
 
-    def stoppingState(self, stateSpace, other, maxBranchSize):
+    def stoppingState(self, stateSpace, other, maxBranchSize, distance):
         if self == other:
             newNode = None
-        elif self.cost2go(other) <= maxBranchSize and stateSpace.collisionAvoidance(other.state):
+        elif distance <= maxBranchSize and stateSpace.collisionAvoidance(other.state):
             newNode = other
         else:
             p1, p2 = self.state, other.state
-            slope = (p2[1] - p1[1]) / (p2[0] - p1[0])
-            dx = maxBranchSize / np.sqrt(1 + slope**2)
-            dy = slope * dx
-            newNode = Node((p1[0] + dx, p1[1] + dy))
+            ratio = maxBranchSize / distance
+            x_pi = p1[0] + ratio*(p2[0]-p1[0])
+            y_pi = p1[1] + ratio*(p2[1]-p1[1])
+            newNode = Node((x_pi, y_pi))
             if not stateSpace.collisionAvoidance(newNode.state):
                 newNode = None
-            # newNode = None
 
         return newNode
                 

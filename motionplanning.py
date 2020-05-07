@@ -21,8 +21,8 @@ class SamplingPlanner:
         randomTree = Tree(start)
         for _ in range(maxTreeSize):            
             sample = self.stateSpace.sample(goalProbability)
-            nearest = randomTree.nearestNeighbor(sample)
-            new = nearest.stoppingState(self.stateSpace, sample, maxBranchSize) # new in direction of sample
+            nearest, distance = randomTree.nearestNeighbor(sample)
+            new = nearest.stoppingState(self.stateSpace, sample, maxBranchSize, distance) # new in direction of sample
             if new is None:
                 continue
             if self._localPlanner(nearest, new) is not None: 

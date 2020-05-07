@@ -6,7 +6,7 @@ A*, Dijkstra, BFS and DFS search algorithms are also supported.
 1. Run the following command in the terminal: python autopilot.py
 
 ## TODO
-Fix nearest neighbor function where it sometimes doesn't pick the closest node.
+Implement trajectory generation in localPlanner
 
 ## Demo 
 The simulation was run using the following user inputs:  

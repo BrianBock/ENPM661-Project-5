@@ -12,7 +12,7 @@ class SamplingPlanner:
         self.stateSpace = stateSpace
         self._planCost = 0
 
-    def RRT(self, game, maxTreeSize=2000, maxBranchSize=50, goalProbability=0.05):
+    def RRT(self, game, maxTreeSize=10000, maxBranchSize=50, goalProbability=0.05):
         ''' Rapidly-exploring Random Tree '''
         solved = False
         # maxBranchSize = game.orange_car.car_height_px

@@ -30,8 +30,8 @@ class RoadMap:
 
         # self.horizontalOffset = 2*game.orange_car.car_width_px
         # self.verticalOffset = 45 - game.orange_car.car_height_px/2 + 5
-        self.verticalOffset = 200
-        self.horizontalOffset = 200
+        self.verticalOffset = 20
+        self.horizontalOffset = 20
 
         start=(world.window.width_px/2+game.orange_car.car_width_px/2,world.height_px/2)
         goal=(world.width_px-1.5*world.window.finish.get_width(), world.height_px/2)
@@ -41,14 +41,16 @@ class RoadMap:
     #     self.defineObstacles()
 
     def checkLane(self, waypoint, window):
-        lane = {'middle': 0, 'right': -1, 'left': 1}
+        lane = [0,1,2,3] # from lower to upper 
         y = waypoint[1]
-        if 0 <= y < 2:
-            return lane['right']
-        elif 2 <= y < 4:
-            return lane['middle']
-        elif 4 <= y < 6:
-            return lane['left'] 
+        if 180 <= y < 270:
+            return lane[3]
+        elif 270 <= y < 360:
+            return lane[2]
+        elif 360 <= y < 450:
+            return lane[1] 
+        elif 450 <= y < 540:
+            return lane[0]
         else:
             return None
 
@@ -88,12 +90,13 @@ class RoadMap:
     def collisionAvoidance(self, state, game):
         p = state[:2]
         in_obst=[]
+        obstacleFree = True
         for obstacle in game.obst_list:
             in_obst.append(self.inRectangle(p,obstacle))
             if any(in_obst):
-                return False
-            else:
-                return True
+                obstacleFree = False
+    
+        return obstacleFree
 
     def sim2cart(self, point):
 
@@ -137,7 +140,7 @@ class RoadMap:
         # p (x,y) in image coords
         X = list(map(lambda p: p[0], segment))
         Y = list(map(lambda p: p[1], segment))
-        plt.plot(X, Y, '-o', color='cyan', linewidth=0.5, markersize=1, zorder=0)
+        plt.plot(X, Y, '-o', color='cyan', linewidth=0.5, markersize=1, zorder=5)
 
     @staticmethod
     def scatter(X, Y):

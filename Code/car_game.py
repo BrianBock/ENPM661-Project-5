@@ -38,6 +38,9 @@ if solved:
 else:
     print('Path not found')
 
+
+# inObstacle = Map.inRectangle((5,5))
+
 motionplanning.Simulation(Map, game, plan, exploredNodes)
 # # logResults(plan, Map) 
 

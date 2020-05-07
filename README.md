@@ -60,7 +60,7 @@ This mode fixes the camera frame to the orange car, and moves with it. The plann
 This mode fixes the camera frame to the entire track, and it does not move. This allows you to see the entire track at once, but it may be more difficult to see the finer details, especially on the longer courses. 
 
 ### Photo Mode
-The program has an optional Photo Mode (accessible via a boolean toogle - `photoMode` in `game.py`) that takes a photo of the entire track at the start. This mode was used to create the track images for each of the difficulty modes above. Due to the way photoMode changes the viewing window and other crucial game elements, it is incompatiable with actual game function. 
+The program has an optional Photo Mode (accessible by running `photo.py`) that takes a photo of the entire track at the start. This mode was used to create the track images for each of the difficulty modes above. Due to the way photoMode changes the viewing window and other crucial game elements, it is incompatible with actual game function. 
 
 
 ## TODO

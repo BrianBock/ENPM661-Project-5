@@ -33,7 +33,7 @@ while needCheck:
         needCheck=False
         print("Use the arrow keys to move the window, and then select where you'd like the blue cars to go")
         print("A blue car will appear where you have clicked, and it's location will be saved for later use")
-        print("When you are done, hit Q to save and exit. The next time you run game.py with this difficulty mode, all of your cars will be where you placed them")
+        print("When you are done, hit Q to save and exit. The next time you run game.py with this difficulty mode, all of your cars will be where you placed them.")
     else:
         print("I didn't understand. Please try again.")
 
@@ -75,7 +75,7 @@ while game.run:
         world.window.x-=speed
     elif keys[pygame.K_RIGHT]:
         world.window.x+=speed
-    elif keys[pygame.K_UP]:
+    if keys[pygame.K_UP]:
         world.window.y-=speed
     elif keys[pygame.K_DOWN]:
         world.window.y+=speed

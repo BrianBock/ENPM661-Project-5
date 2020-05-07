@@ -23,7 +23,7 @@ road_length = 250 #meters, converted to pix by *30
 needCheck=True
 print("This is a building mode designed for picking the locations of the blue cars")
 while needCheck:
-    check=input("This mode will overwrite any previously saved blue car positions. Are you sure you want to continue? Type 'Yes' or 'No': ")
+    check=input("This mode will overwrite any previously saved blue car positions for difficulty: '"+difficulty+"'. Are you sure you want to continue? Type 'Yes' or 'No': ")
     if check.lower()=="no" or check.lower()=='n':
         print("Exiting")
         needCheck=False
@@ -32,7 +32,7 @@ while needCheck:
         needCheck=False
         print("Use the arrow keys to move the window, and then select where you'd like the blue cars to go")
         print("A blue car will appear where you have clicked, and it's location will be saved for later use")
-        print("When you are done, hit Q to save and exit. The next time you run, change 'manuallyAddCars' to False in game.py and 'userDefinedCars' to True in the World class")
+        print("When you are done, hit Q to save and exit. The next time you run game.py with this difficulty mode, all of your cars will be where you placed them")
     else:
         print("I didn't understand. Please try again.")
 
@@ -106,8 +106,8 @@ print("Saving data")
 # Purge duplicates from long clicks
 bluecarlist=list(dict.fromkeys(bluecarlist))
 # print(bluecarlist)
-with open('/world_files/car_positions_'+difficulty+'.data','wb') as filehandle:
+with open('world_files/car_positions_'+difficulty+'.data','wb') as filehandle:
     pickle.dump(bluecarlist,filehandle)
     print("Data saved")
-with open('/world_files/road_length_'+difficulty+'.data','wb') as filehandle:
+with open('world_files/road_length_'+difficulty+'.data','wb') as filehandle:
     pickle.dump(road_length,filehandle)

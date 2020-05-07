@@ -23,9 +23,9 @@ class World():
     def __init__(self,game):
 
         if game.gameMode!='Random':
-            filepath='/world_files/road_length'+game.gameMode+'.data'
+            filepath='world_files/road_length'+game.gameMode+'.data'
             if path.exists(filepath):
-                with open('/world_files/road_length'+game.gameMode+'.data','rb') as filehandle:
+                with open('world_files/road_length'+game.gameMode+'.data','rb') as filehandle:
                         width=pickle.load(filehandle)
             else:
                 width=300

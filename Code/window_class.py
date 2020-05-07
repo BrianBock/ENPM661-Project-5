@@ -70,42 +70,43 @@ class Window():
         # Redraw shoulder lines
         shoulder_count=WorldSize_px[0]//self.solid_line.get_width()+1
 
-        top_shoulder_pos_y=2*self.lane_width-self.y
+        self.top_shoulder_pos_y=2*self.lane_width-self.y
         top_shoulder_pos_x=0
-        bot_shoulder_pos_y=WorldSize_px[1]-2*self.lane_width-self.y
+        self.bot_shoulder_pos_y=WorldSize_px[1]-2*self.lane_width-self.y
         bot_shoulder_pos_x=0
         
             # Top shoulder
-        if top_shoulder_pos_y<=self.y+self.height_px:
-            self.win.blit(self.solid_line,(top_shoulder_pos_x,top_shoulder_pos_y))
+        if self.top_shoulder_pos_y<=self.y+self.height_px:
+            self.win.blit(self.solid_line,(top_shoulder_pos_x,self.top_shoulder_pos_y))
             for i in range(shoulder_count):
                 # Top shoulder
                 top_shoulder_pos_x=i*self.solid_line.get_width()-self.x
                 if top_shoulder_pos_x<self.x+self.width_px:
-                    self.win.blit(self.solid_line,(top_shoulder_pos_x,top_shoulder_pos_y))
+                    self.win.blit(self.solid_line,(top_shoulder_pos_x,self.top_shoulder_pos_y))
 
             # Bottom shoulder
         
-        if bot_shoulder_pos_y<=self.y+self.height_px:
-            self.win.blit(self.solid_line,(bot_shoulder_pos_x,bot_shoulder_pos_y))
+        if self.bot_shoulder_pos_y<=self.y+self.height_px:
+            self.win.blit(self.solid_line,(bot_shoulder_pos_x,self.bot_shoulder_pos_y))
             for i in range(shoulder_count):
                 bot_shoulder_pos_x=i*self.solid_line.get_width()-self.x
                 if bot_shoulder_pos_x<self.x+self.width_px:
-                    self.win.blit(self.solid_line,(bot_shoulder_pos_x,bot_shoulder_pos_y))
+                    self.win.blit(self.solid_line,(bot_shoulder_pos_x,self.bot_shoulder_pos_y))
                 
             
         # Redraw lane lines
         lane_art_count=WorldSize_px[0]//self.lane_line.get_width()+1
+        self.lane_pos_y=[]
         for i in range(self.lane_count-1):
-            lane_pos_y=i*self.lane_width-self.y+3*self.lane_width
+            self.lane_pos_y.append(i*self.lane_width-self.y+3*self.lane_width)
             # only draw the lines that would be visible (for speed)
-            if lane_pos_y<=self.y+self.height_px:
-                self.win.blit(self.lane_line,(0-self.x,lane_pos_y))
+            if self.lane_pos_y[i]<=self.y+self.height_px:
+                self.win.blit(self.lane_line,(0-self.x,self.lane_pos_y[i]))
 
                 for j in range(lane_art_count):
                     lane_pos_x=j*self.lane_line.get_width()-self.x
                     # if lane_pos_x<self.x+self.width_px:
-                    self.win.blit(self.lane_line,(lane_pos_x,lane_pos_y))
+                    self.win.blit(self.lane_line,(lane_pos_x,self.lane_pos_y[i]))
                 
 
 
@@ -158,7 +159,7 @@ class World():
     def __init__(self,game,ManuallyAddCars,photoMode):
 
         width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350,'Random':random.randint(75,350)}
-        UserDefinedCars=True
+        UserDefinedCars=False
 
         self.width_m=width[game.gameMode] # meters
         self.height_m=24 # meters

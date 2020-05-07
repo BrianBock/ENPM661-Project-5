@@ -12,7 +12,7 @@ import logResults
 
 
 manuallyAddCars=False
-gameMode="Easy" #Easy, Medium, Hard, Extreme, Random
+gameMode="Medium" #Easy, Medium, Hard, Extreme, Random
 photoMode=False
 
 if manuallyAddCars == True:
@@ -67,12 +67,12 @@ world=World(game,manuallyAddCars,photoMode)
 
 
 
-
-
+changelaneleft=False
+changelaneright=False
 
 # Run the game
 while game.run:
-    game.clock.tick(100)
+    game.clock.tick(50)
 
     # If there are no blue cars, make some more
     # print(len(obst_list))
@@ -101,6 +101,44 @@ while game.run:
 
     # Move the orange car based on arrow keys
     keys = pygame.key.get_pressed()
+    t=pygame.time.get_ticks()
+    if keys[pygame.K_LEFT]:
+        if not changelaneleft:
+            start_time=t
+            # game.orange_car.turnCar(5)
+            changelaneleft=True
+            direction=1
+
+    if changelaneleft:
+        if t-start_time<=1000:
+            game.orange_car.turnCar(15)  
+        elif game.orange_car.theta >0:
+        # t-start_time<=1000:
+            game.orange_car.turnCar(-15)  
+        else:
+            changelaneleft=False
+       
+
+    if keys[pygame.K_RIGHT]:
+        if not changelaneright:
+            start_time=t
+            # game.orange_car.turnCar(5)
+            changelaneright=True
+            direction=1
+
+    if changelaneright:
+        if t-start_time<=1000:
+            game.orange_car.turnCar(-15)  
+        elif game.orange_car.theta <0:
+        # t-start_time<=1000:
+            game.orange_car.turnCar(15)  
+        else:
+            changelaneright=False
+
+    if not changelaneright or not changelaneleft:
+        game.orange_car.turnCar(0)
+    # elif keys[pygame.K_RIGHT]:
+    #     game.orange_car.turnCar(-15)
     # world.moveWindow(keys,game)
     # game.orange_car.moveCar(keys,(game.canvas_width,game.canvas_height))
     
@@ -120,13 +158,16 @@ while game.run:
             bluecarlist.append(cursor_pos)
     
 
-    if game.orange_car.spritex<world.window.finish_line:
-        game.orange_car.moveCar(world,game)
+    # if game.orange_car.spritex<world.window.finish_line:
+    #     game.orange_car.turnCar(0)
+
+
         print(game.orange_car.spritex,game.orange_car.spritey,game.orange_car.theta)
 
-    if 750<=game.orange_car.spritex<=800:
-        print("turn?")
-        game.orange_car.turnCar(-35)
+    # if 750<=game.orange_car.spritex<=800:
+    #     print("turn?")
+    #     game.orange_car.turnCar(-35)
+    world.updateWinPos(game)
     world.window.redrawGameWindow(game,world.WorldSize_px) 
         
 

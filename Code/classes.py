@@ -126,41 +126,46 @@ class car(pygame.sprite.Sprite):
 
     def turnCar(self,wheel_angle):
         print("Turning")
-        R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
-        # if wheel_angle<0:
-        #     R*=-1
-        print("R="+str(R))
-        alpha=math.asin(self.a2/R)
-        print("alpha="+str(alpha))
-        R1=R*math.cos(alpha)
+        if wheel_angle != 0:
+            R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
+            # if wheel_angle<0:
+            #     R*=-1
+            print("R="+str(R))
+            alpha=math.asin(self.a2/R)
+            print("alpha="+str(alpha))
+            R1=R*math.cos(alpha)
 
-        # # Initial position of Center of Rotation in world frame (x,y)
-        # COR_i=(-R1*cosd(self.theta)+self.x,-(R*math.sin(alpha))*sind(self.theta)+self.y)
-        # print("COR_i="+str(COR_i))
+            # # Initial position of Center of Rotation in world frame (x,y)
+            # COR_i=(-R1*cosd(self.theta)+self.x,-(R*math.sin(alpha))*sind(self.theta)+self.y)
+            # print("COR_i="+str(COR_i))
 
-        # # Final position of Center of Rotation in world frame (x,y)
-        # COR_f=(COR_i[0]+self.vel*sind(self.theta)*self.dt,COR_i[1]+self.vel*cosd(self.theta)*self.dt)
-        # print("COR_f="+str(COR_f))
+            # # Final position of Center of Rotation in world frame (x,y)
+            # COR_f=(COR_i[0]+self.vel*sind(self.theta)*self.dt,COR_i[1]+self.vel*cosd(self.theta)*self.dt)
+            # print("COR_f="+str(COR_f))
 
-        ang_vel=self.wheel_radius*self.wheel_speed/(R1+self.W/2)
-        if wheel_angle<0:
-            ang_vel*=-1
-        print("ang vel="+str(ang_vel))
-        dtheta=np.rad2deg(ang_vel*self.dt)
-        print("detheta="+str(dtheta))
+            ang_vel=self.wheel_radius*self.wheel_speed/(R1+self.W/2)
+            if wheel_angle<0:
+                ang_vel*=-1
+            print("ang vel="+str(ang_vel))
+            dtheta=np.rad2deg(ang_vel*self.dt)
+            print("detheta="+str(dtheta))
 
-        B=(180-abs(dtheta))/2-np.rad2deg(alpha)
+            B=(180-abs(dtheta))/2-np.rad2deg(alpha)
 
-        L=abs(2*R*sind(abs(dtheta)/2))
+            L=abs(2*R*sind(abs(dtheta)/2))
 
-        # Change in position of car in car frame (x,y)
-        d_c=(L*sind(B), L*cosd(B))
-        print("dc="+str(d_c))
+            # Change in position of car in car frame (x,y)
+            d_c=(L*sind(B), L*cosd(B))
+            print("dc="+str(d_c))
+            self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt+d_c[1]*cosd(self.theta)#+(COR_f[0]-COR_i[0])
+            self.y-=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt+d_c[0]*sind(self.theta)#+(COR_f[1]-COR_i[1])
 
-        self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt+d_c[1]*cosd(self.theta)#+(COR_f[0]-COR_i[0])
-        self.y+=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt+d_c[0]*sind(self.theta)#+(COR_f[1]-COR_i[1])
+            self.theta+=dtheta
 
-        self.theta+=dtheta
+        else:
+            self.x+=self.vel*cosd(self.theta)
+            self.y-=self.vel*sind(self.theta)
+
 
         # self.theta=self.theta % 360
 
@@ -183,27 +188,10 @@ class car(pygame.sprite.Sprite):
         self.spritey-=self.vel*sind(self.theta)
         self.updateCarOrigin()
         world.updateWinPos(game)
-        
-        # # canvas_width,canvas_height=canvas_size
-
-        # if keys[pygame.K_LEFT] and self.spritex > self.vel: 
-        #     self.spritex -= self.vel
-
-        # elif keys[pygame.K_RIGHT] and self.spritex < (canvas_width - self.vel - self.car_width):
-        #     self.spritex += self.vel
-
-        # if keys[pygame.K_DOWN] and self.spritey <(canvas_height-self.vel-self.car_height):
-        #     self.spritey+=self.vel
-
-        # elif keys[pygame.K_UP] and self.spritey > self.vel:
-        #     self.spritey-=self.vel
-
-
-        # elif keys[pygame.K_a]:
-        #     self.turnCar(2)
-        # elif keys[pygame.K_s]:
-        #     self.turnCar(-2)
-
+    
+    
+    # def laneChange(self,direction):
+    #     self.turnCar(15)
         
 
 

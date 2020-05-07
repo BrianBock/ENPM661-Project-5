@@ -43,19 +43,15 @@ class World():
 
         self.window=Window(game, self.WorldSize_px)
 
-        print
-
 
         if game.gameMode == 'Random':
-            # self.generateBlueCars(game)
             for i in range (5,random.randint(20,45)):
                 self.generateRandomObstacle(game)
         
-        # elif not ManuallyAddCars and UserDefinedCars:
-        #     self.generateBlueCars(game,UserDefinedCars)
+        else:
+            self.generateBlueCars(game)
 
-
-        self.generateGreenCars(game)
+        # self.generateGreenCars(game)
             # self.showWorldMap(game)
 
 
@@ -70,14 +66,14 @@ class World():
 
 
 
-    def generateBlueCars(self,game,UserDefinedCars):
+    def generateBlueCars(self,game):
     # Create stationary cars
         print("Populating Blue cars")
-        # start_pos_list=[(120,225),(230,320),(656,500),(853,320),(493,408),(835,495),(1067,405),(1158,500)]
 
         start_pos_list=[]
-        if UserDefinedCars:
-            with open('/world_files/car_positions_'+game.gameMode+'.data','rb') as filehandle:
+        filepath='world_files/car_positions_'+game.gameMode+'.data'
+        if path.exists(filepath):
+            with open('world_files/car_positions_'+game.gameMode+'.data','rb') as filehandle:
                 start_pos_list=pickle.load(filehandle)
                 print(start_pos_list)
 
@@ -86,6 +82,9 @@ class World():
             new_obst=car(x,y,"obstacle")
             game.obst_list.add(new_obst)
             game.all_sprites.add(new_obst)
+
+
+
 
 
     def generateRandomObstacle(self,game):

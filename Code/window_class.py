@@ -156,7 +156,7 @@ class Window():
 
 
 class World():
-    def __init__(self,game,ManuallyAddCars,photoMode):
+    def __init__(self,game,photoMode):
 
         width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350,'Random':random.randint(75,350)}
         UserDefinedCars=False
@@ -182,8 +182,8 @@ class World():
             for i in range (5,random.randint(20,45)):
                 self.generateRandomObstacle(game)
         
-        elif not ManuallyAddCars and UserDefinedCars:
-            self.generateBlueCars(game,UserDefinedCars)
+        # elif not ManuallyAddCars and UserDefinedCars:
+        #     self.generateBlueCars(game,UserDefinedCars)
 
         if not self.window.photoMode:
             self.generateGreenCars(game)

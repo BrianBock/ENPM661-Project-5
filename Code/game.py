@@ -20,7 +20,7 @@ print("Starting game")
 game=car_game(difficulty) # Instantiate game
 
 print("Generating world")
-world=World(game,manuallyAddCars,photoMode) # Generate world
+world=World(game,photoMode) # Generate world
 
 # print("Generating roadmap for solver")
 # Map = statespace.RoadMap(game, world)

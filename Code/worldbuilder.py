@@ -12,7 +12,7 @@ import statespace
 import motionplanning
 import logResults
 
-manuallyAddCars=True
+
 difficulty="Easy" #Easy, Medium, Hard, Extreme, Random
 photoMode=False
 
@@ -39,7 +39,7 @@ print("Starting game")
 game=car_game(difficulty) # Instantiate game
 
 print("Generating world")
-world=World(game,manuallyAddCars,photoMode) # Generate world
+world=World(game,photoMode) # Generate world
 
 
 # Run the game

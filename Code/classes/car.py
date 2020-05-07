@@ -124,7 +124,7 @@ class car(pygame.sprite.Sprite):
         else:
             deltax_m=self.vel*cosd(self.theta)*self.dt
             deltay_m=self.vel*sind(self.theta)*self.dt
-            print(deltax_m)
+            # print(deltax_m)
         
         self.x+=deltax_m*game.pixpermeter
         self.y-=deltay_m*game.pixpermeter

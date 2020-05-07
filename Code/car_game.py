@@ -52,16 +52,18 @@ actions = [] # L for left lane change, R for right lane change, number for secon
 #     if act == 2:
 #         t = random.randint(1,5)
 #         actions.append(t)
-actions=['L',1,'R',1,'L']
+actions=[4]#,'L',1,'R',1,'L']
 print(actions)
 
 busy = False
 angle = 0
 turn_increment = 15
+count=0
 
 # Run the game
 while game.run:
     game.clock.tick(100)
+    count+=1
 
     # Update green cars
     for active_car in game.active_list:
@@ -75,24 +77,25 @@ while game.run:
 
     keys = pygame.key.get_pressed()
 
-    t = pygame.time.get_ticks()
+    # t = pygame.time.get_ticks()
 
     if not busy and actions:
         action = actions.pop(0)
-        start_time = t
+        start_count = count
         busy = True
 
         if action == 'L':
             angle = turn_increment
-            lane_change_time = 1.32
+            lane_change_count = 35
         elif action == 'R':
             angle = -turn_increment
-            lane_change_time = 1.32
+            lane_change_count = 35
         else:
             angle = 0
+            startx = game.orange_car.x # current pos of car
 
     if angle != 0:
-        if t-start_time <= ((lane_change_time)*1000)/2:
+        if count-start_count<=lane_change_count:
             game.orange_car.turnCar(angle,game)  
         elif game.orange_car.theta*(angle/abs(angle)) > 0:
             game.orange_car.turnCar(-angle,game)
@@ -101,13 +104,13 @@ while game.run:
             busy = False 
 
     elif angle == 0:
-        if t-start_time <= action*1000:
+        if game.orange_car.x<=startx+action*game.pixpermeter:
             game.orange_car.turnCar(angle,game)
         else:
             busy = False
 
     world.updateWinPos(game)
-    world.window.redrawGameWindow(game,world.WorldSize_px) 
+    world.window.redrawGameWindow(game,world.WorldSize_px)
         
     if keys[pygame.K_q]:
         pygame.quit()

@@ -16,8 +16,9 @@ import logResults
 
 
 
-difficulty="Easy" #Easy, Medium, Hard, Extreme, Random
-photoMode=False
+difficulty = "Easy" #Easy, Medium, Hard, Extreme, Random
+road_length = 250 #meters, converted to pix by *30
+photoMode = False
 
 
 needCheck=True
@@ -109,3 +110,5 @@ bluecarlist=list(dict.fromkeys(bluecarlist))
 with open('car_positions_'+difficulty+'.data','wb') as filehandle:
     pickle.dump(bluecarlist,filehandle)
     print("Data saved")
+with open('road_length_'+difficulty+'.data','wb') as filehandle:
+    pickle.dump(road_length,filehandle)

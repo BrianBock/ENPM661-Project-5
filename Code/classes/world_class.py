@@ -20,7 +20,11 @@ from classes.window_class import Window
 class World():
     def __init__(self,game,photoMode):
 
-        width={'Easy':75,'Medium':150,'Hard':250,'Extreme':350,'Random':random.randint(75,350)}
+        if game.gameMode!='Random':
+            with open('road_length'+game.gameMode+'.data','rb') as filehandle:
+                    width=pickle.load(filehandle)
+        else:
+            width=random.randint(150,1500)
         UserDefinedCars=False
 
         self.width_m=width[game.gameMode] # meters
@@ -35,10 +39,7 @@ class World():
 
         print
 
-        # self.width_px=4000
-        # self.height_px=1600
 
-        # if ManuallyAddCars == False and UserDefinedCars == False:
         if game.gameMode == 'Random':
             # self.generateBlueCars(game)
             for i in range (5,random.randint(20,45)):

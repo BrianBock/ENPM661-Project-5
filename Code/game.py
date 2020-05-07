@@ -3,6 +3,7 @@ import pygame
 import pickle
 from time import time
 import math
+import random
 
 # Import our own functions
 from classes import car
@@ -55,11 +56,23 @@ world=World(game,manuallyAddCars,photoMode) # Generate world
 # motionplanning.Simulation(Map, game, plan, exploredNodes)
 # # logResults(plan, Map) 
 
-actions = ['L',1,'R',1,'L',2] # L for left lane change, R for right lane change, number for seconds going straight
+actions = [] # L for left lane change, R for right lane change, number for seconds going straight
+
+for i in range(10):
+    act = random.randint(0,2)
+    if act == 0:
+        actions.append('L')
+    if act == 1:
+        actions.append('R')
+    if act == 2:
+        t = random.randint(1,5)
+        actions.append(t)
+
+print(actions)
+
 busy = False
-lane_change_time = 2.6 #seconds
 angle = 0
-turn_increment = 5
+turn_increment = 15
 
 # Run the game
 while game.run:
@@ -86,8 +99,10 @@ while game.run:
 
         if action == 'L':
             angle = turn_increment
+            lane_change_time = 1.32
         elif action == 'R':
             angle = -turn_increment
+            lane_change_time = 1.4
         else:
             angle = 0
 
@@ -97,6 +112,7 @@ while game.run:
         elif game.orange_car.theta*(angle/abs(angle)) > 0:
             game.orange_car.turnCar(-angle)
         else:
+            game.orange_car.theta = 0
             busy = False 
 
     elif angle == 0:

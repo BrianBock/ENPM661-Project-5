@@ -128,27 +128,17 @@ class car(pygame.sprite.Sprite):
         # print("Turning")
         if wheel_angle != 0:
             R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
-            # if wheel_angle<0:
-            #     R*=-1
-            print("R="+str(R))
+
             alpha=math.asin(self.a2/R)
-            print("alpha="+str(alpha))
+
             R1=R*math.cos(alpha)
-
-            # # Initial position of Center of Rotation in world frame (x,y)
-            # COR_i=(-R1*cosd(self.theta)+self.x,-(R*math.sin(alpha))*sind(self.theta)+self.y)
-            # print("COR_i="+str(COR_i))
-
-            # # Final position of Center of Rotation in world frame (x,y)
-            # COR_f=(COR_i[0]+self.vel*sind(self.theta)*self.dt,COR_i[1]+self.vel*cosd(self.theta)*self.dt)
-            # print("COR_f="+str(COR_f))
 
             ang_vel=self.wheel_radius*self.wheel_speed/(R1+self.W/2)
             if wheel_angle<0:
                 ang_vel*=-1
-            print("ang vel="+str(ang_vel))
+
             dtheta=np.rad2deg(ang_vel*self.dt)
-            print("detheta="+str(dtheta))
+
 
             B=(180-abs(dtheta))/2-np.rad2deg(alpha)
 
@@ -156,7 +146,7 @@ class car(pygame.sprite.Sprite):
 
             # Change in position of car in car frame (x,y)
             d_c=(L*sind(B), L*cosd(B))
-            print("dc="+str(d_c))
+
             self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt+d_c[1]*cosd(self.theta)#+(COR_f[0]-COR_i[0])
             self.y-=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt+d_c[0]*sind(self.theta)#+(COR_f[1]-COR_i[1])
 
@@ -166,17 +156,11 @@ class car(pygame.sprite.Sprite):
             self.x+=self.vel*cosd(self.theta)
             self.y-=self.vel*sind(self.theta)
 
-
-        # self.theta=self.theta % 360
-
-        print(self.x,self.y,self.theta)
-        # print("\n\n")
+        theta = self.theta % 360
 
         self.updateSpriteOrigin()
-        # self.car,self.rect=self.rot_center(self.theta)
-        theta = self.theta % 360
         self.car_image_new = pygame.transform.rotate(self.car_image, theta)
-        rect = self.car_image.get_rect()
+
 
 
 

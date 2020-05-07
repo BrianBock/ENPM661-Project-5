@@ -21,8 +21,8 @@ class SamplingPlanner:
         randomTree = Tree(start)
         for _ in range(maxTreeSize):            
             sample = self.stateSpace.sample(goalProbability)
-            nearest = randomTree.nearestNeighbor(sample)
-            new = nearest.stoppingState(self.stateSpace, sample, maxBranchSize, game) # new in direction of sample
+            nearest, distance = randomTree.nearestNeighbor(sample)
+            new = nearest.stoppingState(self.stateSpace, sample, maxBranchSize, distance, game) # new in direction of sample
             if new is None:
                 continue
             if self._localPlanner(nearest, new) is not None: 
@@ -35,7 +35,7 @@ class SamplingPlanner:
         
         # Backtrack
         if solved == False:
-            new = randomTree.nearestNeighbor(goal)
+            new, _ = randomTree.nearestNeighbor(goal)
         plan = _generatePlan(new)
         self._measureCost(plan)
     
@@ -43,9 +43,34 @@ class SamplingPlanner:
 
     @staticmethod
     def _localPlanner(nearestNode, newNode):
-        # write trajectory (currently straight-line) planner here
-
+        # trajectory (straight-line) planner
+        
         return True
+
+    def actionPlanner(self, plan):
+        actions = []
+        mergeDistance = self.stateSpace.mergeDistance
+
+        x_start = plan[0][0]
+        previousLane = self.stateSpace.checkLane(plan[0])
+        for i in range(1, len(plan)):
+            waypoint = plan[i]
+            lane = self.stateSpace.checkLane(waypoint)
+            if lane < previousLane:
+                previousWaypoint = plan[i-1]
+                distance = previousWaypoint[0] - x_start
+                x_start = previousWaypoint[0] + mergeDistance
+                actions.append(distance)
+                actions.append('R')
+            elif lane > previousLane:
+                previousWaypoint = plan[i-1]
+                distance = previousWaypoint[0] - x_start
+                x_start = previousWaypoint[0] + mergeDistance
+                actions.append(distance)
+                actions.append('L')
+            previousLane = lane
+
+        return actions
 
     def _measureCost(self, plan):
         for i in range(1, len(plan)):

@@ -19,6 +19,7 @@ class RoadMap:
         ## trajectory parameters
         self.uniformMotionDuration, self.no_interpolations = 3, 10
         self.timeStep = self.uniformMotionDuration / self.no_interpolations # dt
+        self.mergeDistance = 2
 
         # self.RPMs, start, goal = self.userInput()
         ## test cases
@@ -31,6 +32,18 @@ class RoadMap:
         self.start, self.goal = Node(start), Node(goal)
         # obstacles' parameters
     #     self.defineObstacles()
+
+    def checkLane(self, waypoint):
+        lane = {'middle': 0, 'right': -1, 'left': 1}
+        y = waypoint[1]
+        if 0 <= y < 2:
+            return lane['right']
+        elif 2 <= y < 4:
+            return lane['middle']
+        elif 4 <= y < 6:
+            return lane['left'] 
+        else:
+            return None
 
 
     # def defineObstacles(self):
@@ -183,7 +196,7 @@ class Tree:
                 minDistance = distance
                 nearestNode = state
 
-        return nearestNode
+        return (nearestNode, minDistance)
 
 class Node:
     def __init__(self, state, action=None, parent=None):
@@ -281,17 +294,17 @@ class Node:
 
         return int(i/threshold*amplification)
 
-    def stoppingState(self, stateSpace, other, maxBranchSize,game):
+    def stoppingState(self, stateSpace, other, maxBranchSize, distance, game):
         if self == other:
             newNode = None
-        elif self.cost2go(other) <= maxBranchSize and stateSpace.collisionAvoidance(other.state,game):
+        elif distance <= maxBranchSize and stateSpace.collisionAvoidance(other.state,game):
             newNode = other
         else:
             p1, p2 = self.state, other.state
-            slope = (p2[1] - p1[1]) / (p2[0] - p1[0])
-            dx = maxBranchSize / np.sqrt(1 + slope**2)
-            dy = slope * dx
-            newNode = Node((p1[0] + dx, p1[1] + dy))
+            ratio = maxBranchSize / distance
+            x_pi = p1[0] + ratio*(p2[0]-p1[0])
+            y_pi = p1[1] + ratio*(p2[1]-p1[1])
+            newNode = Node((x_pi, y_pi))
             if not stateSpace.collisionAvoidance(newNode.state,game):
                 newNode = None
 

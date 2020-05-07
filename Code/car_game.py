@@ -26,22 +26,22 @@ game=car_game(difficulty) # Instantiate game
 print("Generating world")
 world=World(game) # Generate world
 
-# print("Generating roadmap for solver")
-# Map = statespace.RoadMap(game, world)
-# print("Attempting to solve")
-# planner = motionplanning.SamplingPlanner(Map,game)
-# t0 = time()
-# solved, plan, exploredNodes, _ = planner.RRT(game)
-# t1 = time() 
-# if solved: 
-#     print(f'Path found in {t1-t0} s\n')
-# else:
-#     print('Path not found')
+print("Generating roadmap for solver")
+Map = statespace.RoadMap(game, world)
+print("Attempting to solve")
+planner = motionplanning.SamplingPlanner(Map,game)
+t0 = time()
+solved, plan, exploredNodes, _ = planner.RRT(game)
+t1 = time() 
+if solved: 
+    print(f'Path found in {t1-t0} s\n')
+else:
+    print('Path not found')
 
-# motionplanning.Simulation(Map, game, plan, exploredNodes)
+motionplanning.Simulation(Map, game, plan, exploredNodes)
 # # logResults(plan, Map) 
 
-actions = [] # L for left lane change, R for right lane change, number for seconds going straight
+actions = planner.actionPlanner(plan) # L for left lane change, R for right lane change, number for seconds going straight
 
 # for i in range(10):
 #     act = random.randint(0,2)

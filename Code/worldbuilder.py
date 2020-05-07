@@ -5,8 +5,6 @@ from time import time
 import math
 import random
 import os
-import os.path
-from os import path
 
 # Import our own functions
 from classes.car_class import car
@@ -44,9 +42,9 @@ bluecarlist=[]
 car_pos_path = 'world_files/car_positions_'+difficulty+'.data'
 length_path = 'world_files/road_length_'+difficulty+'.data'
 
-if path.exists(car_pos_path):
+if os.path.exists(car_pos_path):
     os.remove(car_pos_path)
-if path.exists(length_path):
+if os.path.exists(length_path):
     os.remove(length_path)
 
 print("Starting game")

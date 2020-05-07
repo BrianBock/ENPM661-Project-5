@@ -9,8 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Patch
 import pickle
-import os.path
-from os import path
+import os
 
 
 # Import our own functions
@@ -24,7 +23,7 @@ class World():
 
         if game.gameMode!='Random':
             filepath='world_files/road_length'+game.gameMode+'.data'
-            if path.exists(filepath):
+            if os.path.exists(filepath):
                 with open('world_files/road_length'+game.gameMode+'.data','rb') as filehandle:
                         width=pickle.load(filehandle)
             else:
@@ -72,7 +71,7 @@ class World():
 
         start_pos_list=[]
         filepath='world_files/car_positions_'+game.gameMode+'.data'
-        if path.exists(filepath):
+        if os.path.exists(filepath):
             with open('world_files/car_positions_'+game.gameMode+'.data','rb') as filehandle:
                 start_pos_list=pickle.load(filehandle)
                 print(start_pos_list)

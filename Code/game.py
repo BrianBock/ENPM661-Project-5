@@ -15,14 +15,13 @@ import motionplanning
 import logResults
 
 difficulty="Easy" #Easy, Medium, Hard, Extreme, Random
-photoMode=False
 
 
 print("Starting game")
 game=car_game(difficulty) # Instantiate game
 
 print("Generating world")
-world=World(game,photoMode) # Generate world
+world=World(game) # Generate world
 
 # print("Generating roadmap for solver")
 # Map = statespace.RoadMap(game, world)

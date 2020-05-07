@@ -9,6 +9,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Patch
 import pickle
+import os.path
+from os import path
 
 
 # Import our own functions
@@ -18,16 +20,20 @@ from classes.window_class import Window
 
 
 class World():
-    def __init__(self,game,photoMode):
+    def __init__(self,game):
 
         if game.gameMode!='Random':
-            with open('road_length'+game.gameMode+'.data','rb') as filehandle:
-                    width=pickle.load(filehandle)
+            filepath='/world_files/road_length'+game.gameMode+'.data'
+            if path.exists(filepath):
+                with open('/world_files/road_length'+game.gameMode+'.data','rb') as filehandle:
+                        width=pickle.load(filehandle)
+            else:
+                width=300
         else:
             width=random.randint(150,1500)
         UserDefinedCars=False
 
-        self.width_m=width[game.gameMode] # meters
+        self.width_m=width # meters
         self.height_m=24 # meters
 
         self.width_px=self.width_m*game.pixpermeter
@@ -35,7 +41,7 @@ class World():
 
         self.WorldSize_px=(self.width_px,self.height_px)
 
-        self.window=Window(game, self.WorldSize_px,photoMode)
+        self.window=Window(game, self.WorldSize_px)
 
         print
 
@@ -48,17 +54,14 @@ class World():
         # elif not ManuallyAddCars and UserDefinedCars:
         #     self.generateBlueCars(game,UserDefinedCars)
 
-        if not self.window.photoMode:
-            self.generateGreenCars(game)
+
+        self.generateGreenCars(game)
             # self.showWorldMap(game)
 
 
         # Create our car
         print("Spawning our car")
-        if self.window.photoMode:
-            game.orange_car=car(440,320,"protagonist")
-        else:
-            game.orange_car=car(410,395,"protagonist")
+        game.orange_car=car(410,395,"protagonist")
         
         game.all_sprites.add(game.orange_car)
 
@@ -74,7 +77,7 @@ class World():
 
         start_pos_list=[]
         if UserDefinedCars:
-            with open('car_positions_'+game.gameMode+'.data','rb') as filehandle:
+            with open('/world_files/car_positions_'+game.gameMode+'.data','rb') as filehandle:
                 start_pos_list=pickle.load(filehandle)
                 print(start_pos_list)
 

@@ -18,7 +18,6 @@ import logResults
 
 difficulty = "Easy" #Easy, Medium, Hard, Extreme, Random
 road_length = 250 #meters, converted to pix by *30
-photoMode = False
 
 
 needCheck=True
@@ -43,7 +42,7 @@ print("Starting game")
 game=car_game(difficulty) # Instantiate game
 
 print("Generating world")
-world=World(game,photoMode) # Generate world
+world=World(game) # Generate world
 
 
 # Run the game
@@ -107,8 +106,8 @@ print("Saving data")
 # Purge duplicates from long clicks
 bluecarlist=list(dict.fromkeys(bluecarlist))
 # print(bluecarlist)
-with open('car_positions_'+difficulty+'.data','wb') as filehandle:
+with open('/world_files/car_positions_'+difficulty+'.data','wb') as filehandle:
     pickle.dump(bluecarlist,filehandle)
     print("Data saved")
-with open('road_length_'+difficulty+'.data','wb') as filehandle:
+with open('/world_files/road_length_'+difficulty+'.data','wb') as filehandle:
     pickle.dump(road_length,filehandle)

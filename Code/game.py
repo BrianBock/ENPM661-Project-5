@@ -6,8 +6,10 @@ import math
 import random
 
 # Import our own functions
-from classes import car
-from window_class import Window, World, car_game
+from classes.car_class import car
+from classes.window_class import Window
+from classes.world_class import World
+from classes.game_class import car_game
 import statespace
 import motionplanning
 import logResults

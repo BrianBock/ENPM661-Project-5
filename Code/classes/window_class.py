@@ -13,7 +13,7 @@ import pickle
 
 # Import our own functions
 from trigfunctions import*
-from classes import car
+from classes.car_class import car
 
 class Window():
     def __init__(self,game,WorldSize_px,photoMode):
@@ -285,71 +285,49 @@ class World():
             self.window.y=-self.window.height_px//2+game.orange_car.y
 
 
-    def showWorldMap(self,game):
-        # plt.figure(1)
-        # plt.subplot(111)
-        # plt.axis([0, self.width_m, 0, self.height_m])
-        # matplotlib.axes.Axes.invert_yaxis()
-        # plt.title("World Map")
-        # plt.grid()
-        # # ax.set_aspect('equal')
-        worldMap=np.full((self.width_px,self.height_px,3),(255,255,255),np.uint8)
-        # Draw all cars as rectangles
-        for sprite in game.all_sprites:
-            worldMap=cv2.rectangle(worldMap,(sprite.spritex,sprite.spritey),(sprite.spritex+sprite.car_width,sprite.spritey+sprite.car_height),sprite.body_color,-1)
+    # def showWorldMap(self,game):
+    #     # plt.figure(1)
+    #     # plt.subplot(111)
+    #     # plt.axis([0, self.width_m, 0, self.height_m])
+    #     # matplotlib.axes.Axes.invert_yaxis()
+    #     # plt.title("World Map")
+    #     # plt.grid()
+    #     # # ax.set_aspect('equal')
+    #     worldMap=np.full((self.width_px,self.height_px,3),(255,255,255),np.uint8)
+    #     # Draw all cars as rectangles
+    #     for sprite in game.all_sprites:
+    #         worldMap=cv2.rectangle(worldMap,(sprite.spritex,sprite.spritey),(sprite.spritex+sprite.car_width,sprite.spritey+sprite.car_height),sprite.body_color,-1)
 
 
-            # a=Rectangle((sprite.spritex,sprite.spritey),sprite.car_width,sprite.car_height, fc=sprite.body_color, angle=sprite.theta,alpha=.5)
-            # ax.add_patch(a)
-        worldMap=cv2.rectangle(worldMap,(self.window.x,self.window.y),(self.window.x+self.window.width_px,self.window.y+self.window.height_px),(0,0,0),3)
-        # win_box=Rectangle(,self.window.width_m,self.window.height_m,fill=None, ec='black', lw=3, angle=0)
-        # ax.add_patch(win_box)
+    #         # a=Rectangle((sprite.spritex,sprite.spritey),sprite.car_width,sprite.car_height, fc=sprite.body_color, angle=sprite.theta,alpha=.5)
+    #         # ax.add_patch(a)
+    #     worldMap=cv2.rectangle(worldMap,(self.window.x,self.window.y),(self.window.x+self.window.width_px,self.window.y+self.window.height_px),(0,0,0),3)
+    #     # win_box=Rectangle(,self.window.width_m,self.window.height_m,fill=None, ec='black', lw=3, angle=0)
+    #     # ax.add_patch(win_box)
 
-        worldMap=cv2.resize(worldMap,(1000,400))
-        cv2.imshow("World Map",worldMap)
-        cv2.waitKey(0)
+    #     worldMap=cv2.resize(worldMap,(1000,400))
+    #     cv2.imshow("World Map",worldMap)
+    #     cv2.waitKey(0)
 
-        # fullWorld.show()
+    #     # fullWorld.show()
 
-        # viewWindow=plt.figure(2)
-        # plt.title("Window View")
-        # fig2, ax2 = plt.subplots(1)
-        # ax2.set_xlim(0,self.window.width_m)
-        # ax2.set_ylim(0,self.window.height_m)
-        # ax2.invert_yaxis()
-        # ax2.grid()
-        # ax2.set_xlabel('meters')
-        # ax2.set_ylabel('meters')
+    #     # viewWindow=plt.figure(2)
+    #     # plt.title("Window View")
+    #     # fig2, ax2 = plt.subplots(1)
+    #     # ax2.set_xlim(0,self.window.width_m)
+    #     # ax2.set_ylim(0,self.window.height_m)
+    #     # ax2.invert_yaxis()
+    #     # ax2.grid()
+    #     # ax2.set_xlabel('meters')
+    #     # ax2.set_ylabel('meters')
 
-        # # ax2.set_aspect('equal')
-        # viewWindow.show()
-
-
-        # plt.show()
+    #     # # ax2.set_aspect('equal')
+    #     # viewWindow.show()
 
 
+    #     # plt.show()
 
-class car_game():
-    def __init__(self,gameMode):
-        pygame.init()
-        self.gameMode=gameMode
 
-        # self.road_speed=1.6
-
-        self.pixpermeter=30 #pixels/meter
-
-        # Set up canvas
-        self.clock = pygame.time.Clock()
-        self.run = True
-
-        # Set up background
-        # self.bg = pygame.image.load('assets/road.png')
-        # self.bgX = 0
-        # self.bgX2 = self.bg.get_width()
-
-        self.all_sprites = pygame.sprite.Group()
-        self.obst_list = pygame.sprite.Group()
-        self.active_list=pygame.sprite.Group()
 
 
 

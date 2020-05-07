@@ -41,30 +41,9 @@ game.orange_car.spritex=440
 game.orange_car.spritey=320
 # world.window.redrawGameWindow()
 
-needPhoto=True
-
-
-
-
-photo=Photo(world)
-
-
-
-# Run the game
-while game.run:
-    game.clock.tick(100)
-
-    # Get new events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game.run = False
-
-
-    # world.updateWinPos(game)
-    world.window.redrawGameWindow(game,world.WorldSize_px) 
-    if needPhoto:
-            pygame.image.save(world.window.win,game.gameMode+'.png')
-            needPhoto=False
-            game.run=False
+world.window.redrawGameWindow(game,world.WorldSize_px)
+path='world_files/'+game.gameMode+'.png'
+pygame.image.save(world.window.win,path)
+print("Image saved to '"+path+"'")
 
 pygame.quit()

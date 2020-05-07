@@ -56,14 +56,16 @@ print("Generating world")
 world=World(game) # Generate world
 
 
+world.window.width_px=1800
+world.window.height_px=world.WorldSize_px[1]
+world.window.win = pygame.display.set_mode((world.window.width_px, world.window.height_px))
+
+
+
 # Run the game
 while game.run:
     game.clock.tick(100)
 
-    # # Update green cars
-    # for active_car in game.active_list:
-    #     active_car.spritex+=active_car.vel
-    #     active_car.updateCarOrigin()
 
     # Get new events
     for event in pygame.event.get():
@@ -104,7 +106,7 @@ while game.run:
         bluecarlist.append(cursor_pos)
 
     # world.updateWinPos(game)
-    world.window.redrawGameWindow(game,world.WorldSize_px) 
+    world.window.redrawGameWindow(game,world.WorldSize_px)
         
     if keys[pygame.K_q]:
         pygame.quit()

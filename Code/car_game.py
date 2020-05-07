@@ -43,16 +43,16 @@ world=World(game) # Generate world
 
 actions = [] # L for left lane change, R for right lane change, number for seconds going straight
 
-for i in range(10):
-    act = random.randint(0,2)
-    if act == 0:
-        actions.append('L')
-    if act == 1:
-        actions.append('R')
-    if act == 2:
-        t = random.randint(1,5)
-        actions.append(t)
-
+# for i in range(10):
+#     act = random.randint(0,2)
+#     if act == 0:
+#         actions.append('L')
+#     if act == 1:
+#         actions.append('R')
+#     if act == 2:
+#         t = random.randint(1,5)
+#         actions.append(t)
+actions=['L',1,'R',1,'L']
 print(actions)
 
 busy = False
@@ -87,22 +87,22 @@ while game.run:
             lane_change_time = 1.32
         elif action == 'R':
             angle = -turn_increment
-            lane_change_time = 1.4
+            lane_change_time = 1.32
         else:
             angle = 0
 
     if angle != 0:
         if t-start_time <= ((lane_change_time)*1000)/2:
-            game.orange_car.turnCar(angle)  
+            game.orange_car.turnCar(angle,game)  
         elif game.orange_car.theta*(angle/abs(angle)) > 0:
-            game.orange_car.turnCar(-angle)
+            game.orange_car.turnCar(-angle,game)
         else:
             game.orange_car.theta = 0
             busy = False 
 
     elif angle == 0:
         if t-start_time <= action*1000:
-            game.orange_car.turnCar(angle)
+            game.orange_car.turnCar(angle,game)
         else:
             busy = False
 

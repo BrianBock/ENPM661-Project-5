@@ -30,7 +30,6 @@ class World():
                 width=300
         else:
             width=random.randint(150,1500)
-        UserDefinedCars=False
 
         self.width_m=width # meters
         self.height_m=24 # meters
@@ -56,7 +55,7 @@ class World():
 
         # Create our car
         print("Spawning our car")
-        game.orange_car=car(410,395,"protagonist")
+        game.orange_car=car(410,408,"protagonist",game)
         
         game.all_sprites.add(game.orange_car)
 
@@ -78,7 +77,7 @@ class World():
 
         for start_pos in start_pos_list:
             x,y=start_pos
-            new_obst=car(x,y,"obstacle")
+            new_obst=car(x,y,"obstacle",game)
             game.obst_list.add(new_obst)
             game.all_sprites.add(new_obst)
 
@@ -91,7 +90,7 @@ class World():
         randx=random.randint(250,self.width_px-400)
         lanes=[225,320,405,500]
         randy=random.choice(lanes)
-        new_obst=car(randx,randy,"obstacle")
+        new_obst=car(randx,randy,"obstacle",game)
         if new_obst.spritex>self.width_px-400:
             new_obst.kill()
         else:
@@ -112,7 +111,7 @@ class World():
             # # Eliminate cars on the lane lines
             # if (100-tempcar.car_height<=randy<=100+tempcar.car_height) or (200-tempcar.car_height<=randy<=200+tempcar.car_height) or (300-tempcar.car_height<=randy<=300+tempcar.car_height):
             #     randy=random.randint(50,350)
-            greencar=car(randx,randy,"dynamic")
+            greencar=car(randx,randy,"dynamic",game)
             game.active_list.add(greencar)
             game.all_sprites.add(greencar)
         print("Done adding green cars")
@@ -120,28 +119,28 @@ class World():
         # obst_list=[]
 
 
-    def moveWindow(self,keys,game):
+    # def moveWindow(self,keys,game):
 
-        if keys[pygame.K_LEFT] and self.window.x > self.window.vel: 
-            self.window.x -= self.window.vel
+    #     if keys[pygame.K_LEFT] and self.window.x > self.window.vel: 
+    #         self.window.x -= self.window.vel
 
-        elif keys[pygame.K_RIGHT] and self.window.x < (self.width_px - self.window.vel - self.window.width_px):
-            self.window.x += self.window.vel
+    #     elif keys[pygame.K_RIGHT] and self.window.x < (self.width_px - self.window.vel - self.window.width_px):
+    #         self.window.x += self.window.vel
 
-        if keys[pygame.K_DOWN] and self.window.y <(self.height_px-self.window.vel-self.window.height_px):
-            self.window.y+=self.window.vel
+    #     if keys[pygame.K_DOWN] and self.window.y <(self.height_px-self.window.vel-self.window.height_px):
+    #         self.window.y+=self.window.vel
 
-        elif keys[pygame.K_UP] and self.window.y > self.window.vel:
-            self.window.y-=self.window.vel
+    #     elif keys[pygame.K_UP] and self.window.y > self.window.vel:
+    #         self.window.y-=self.window.vel
 
-        if keys[pygame.K_a]:
-            game.orange_car.turnCar(15)
+    #     if keys[pygame.K_a]:
+    #         game.orange_car.turnCar(15)
 
-        # print(self.window.x,self.window.y)
-        if not self.window.photoMode:
-            game.orange_car.x=self.window.x+self.window.width_px//2
-            game.orange_car.y=self.window.y+self.window.height_px//2
-            game.orange_car.updateSpriteOrigin()
+    #     # print(self.window.x,self.window.y)
+    #     if not self.window.photoMode:
+    #         game.orange_car.x=self.window.x+self.window.width_px//2
+    #         game.orange_car.y=self.window.y+self.window.height_px//2
+    #         game.orange_car.updateSpriteOrigin()
 
 
     def updateWinPos(self,game):

@@ -40,7 +40,7 @@ class Window():
  
         self.finish = pygame.image.load('../assets/finish_line2.png')
         self.finish_line=WorldSize_px[0]-1.5*self.finish.get_width() # x pos of the center of the finish line
-       
+        self.start_line=pygame.image.load('../assets/start_line.png')
 
 
     
@@ -121,6 +121,11 @@ class Window():
         if self.x+self.width_px>self.finish_line-.5*self.finish.get_width():
             # print("finish")
             self.win.blit(self.finish,(self.finish_line-.5*self.finish.get_width()-self.x,-self.y))
+
+        # Draw start line
+        # if self.x+self.width_px>self.finish_line-.5*self.finish.get_width():
+            # print("finish")
+        self.win.blit(self.start_line,(410+game.orange_car.car_width_px/2-self.x,-self.y))
 
 
 

@@ -10,7 +10,7 @@ from matplotlib.patches import Rectangle, Patch
 from trigfunctions import*
 
 class car(pygame.sprite.Sprite):
-    def __init__(self,x,y,car_type):
+    def __init__(self,x,y,car_type,game):
         pygame.sprite.Sprite.__init__(self)
         # super().__init__()
 
@@ -19,18 +19,18 @@ class car(pygame.sprite.Sprite):
         self.y=y # start position
         self.theta=0
 
-        # Car sprite dimensions
-        # self.car_width_px=130 # total width of car (for bounding box)
-        # self.car_height_px=70 # total height of car (for bounding box)
-
-        self.car_width_px=100 # total width of car (for bounding box)
-        self.car_height_px=60 # total height of car (for b
 
         # Physical car dimensions (meters)
-        self.car_width = 5
-        self.car_height = 2
+        self.car_width = 4
+        self.car_height = 1.8
         self.wheel_radius = .46
-        self.wheel_speed = 85 # rad/s
+        
+
+
+        # Car sprite dimensions
+        self.car_width_px=int(self.car_width*game.pixpermeter) # total width of car (for bounding box)
+        self.car_height_px=int(.6*self.car_width_px) # total height of car (for b
+
 
         self.dt=.1 # seconds
 
@@ -42,7 +42,8 @@ class car(pygame.sprite.Sprite):
             self.car_image = pygame.image.load('../assets/orange_car.png')
             self.body_color=(0,153,255,1)
             self.stationary=False
-            self.vel=5 #m/s
+            self.vel=2 #m/s
+            self.wheel_speed = self.vel/self.wheel_radius # rad/s
 
 
         if car_type == "obstacle":
@@ -67,7 +68,7 @@ class car(pygame.sprite.Sprite):
         if not self.stationary:
             # Front wheel drive car utlizing Ackermann Steering
             # http://ckw.phys.ncku.edu.tw/public/pub/Notes/GeneralPhysics/Powerpoint/Extra/05/11_0_0_Steering_Theroy.pdf
-            self.l=100 # length between front and rear wheel axes (wheelbase)
+            self.l=self.car_width # length between front and rear wheel axes (wheelbase)
             self.a2=self.l/2 # distance from the back axel to the center of mass of the car
             self.W=self.car_height # distance between the left and right wheels
 
@@ -81,38 +82,6 @@ class car(pygame.sprite.Sprite):
         self.y=self.spritey+self.car_height_px//2
 
 
-    def rot_center(self,angle):
-        """rotate an image while keeping its center"""
-        # http://www.pygame.org/wiki/RotateCenter?parent=CookBook
-        rot_image = pygame.transform.rotate(self.car, angle)
-        rot_rect = rot_image.get_rect(center=self.rect.center)
-        return rot_image,rot_rect
-
-
-    # def moveCar(self,keys,canvas_size):
-    #     canvas_width,canvas_height=canvas_size
-        
-    #     if keys[pygame.K_LEFT] and self.spritex > self.vel: 
-    #         self.spritex -= self.vel
-
-    #     elif keys[pygame.K_RIGHT] and self.spritex < (canvas_width - self.vel - self.car_width):
-    #         self.spritex += self.vel
-
-    #     if keys[pygame.K_DOWN] and self.spritey <(canvas_height-self.vel-self.car_height):
-    #         self.spritey+=self.vel
-
-    #     elif keys[pygame.K_UP] and self.spritey > self.vel:
-    #         self.spritey-=self.vel
-
-
-    #     elif keys[pygame.K_a]:
-    #         self.turnCar(2)
-    #     elif keys[pygame.K_s]:
-    #         self.turnCar(-2)
-
-    #     self.updateCarOrigin()
-
-
         #things to know about a node
         # Constants we know: l, a2, wheel speed, wheel radius
         # starting x, y, theta, vx, vy, wheel angle
@@ -124,7 +93,7 @@ class car(pygame.sprite.Sprite):
         # Use R1, wheel speed, wheel radius to compute angular velocity around COR (Av)
 
 
-    def turnCar(self,wheel_angle):
+    def turnCar(self,wheel_angle,game):
         # print("Turning")
         if wheel_angle != 0:
             R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
@@ -145,16 +114,20 @@ class car(pygame.sprite.Sprite):
             L=abs(2*R*sind(abs(dtheta)/2))
 
             # Change in position of car in car frame (x,y)
-            d_c=(L*sind(B), L*cosd(B))
+            d_c=(L*sind(B)*self.dt, L*cosd(B)*self.dt)
 
-            self.x+=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt+d_c[1]*cosd(self.theta)#+(COR_f[0]-COR_i[0])
-            self.y-=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt+d_c[0]*sind(self.theta)#+(COR_f[1]-COR_i[1])
+            deltax_m=d_c[0]*cosd(self.theta)+self.vel*cosd(self.theta)*self.dt+d_c[1]*cosd(self.theta)#+(COR_f[0]-COR_i[0])
+            deltay_m=d_c[1]*sind(self.theta)+self.vel*sind(self.theta)*self.dt+d_c[0]*sind(self.theta)#+(COR_f[1]-COR_i[1])
 
             self.theta+=dtheta
 
         else:
-            self.x+=self.vel*cosd(self.theta)
-            self.y-=self.vel*sind(self.theta)
+            deltax_m=self.vel*cosd(self.theta)*self.dt
+            deltay_m=self.vel*sind(self.theta)*self.dt
+            print(deltax_m)
+        
+        self.x+=deltax_m*game.pixpermeter
+        self.y-=deltay_m*game.pixpermeter
 
         theta = self.theta % 360
 

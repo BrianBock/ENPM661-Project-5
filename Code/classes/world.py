@@ -14,8 +14,8 @@ import os
 
 # Import our own functions
 from trigfunctions import*
-from classes.car_class import car
-from classes.window_class import Window
+from car import car
+from window import Window
 
 
 class World():

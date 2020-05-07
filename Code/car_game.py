@@ -4,15 +4,18 @@ import pickle
 from time import time
 import math
 import random
+import sys
+sys.path.append('classes/')
 
 # Import our own functions
-from classes.car_class import car
-from classes.window_class import Window
-from classes.world_class import World
-from classes.game_class import car_game
+from car import car
+from window import Window
+from world import World
+from game import car_game
 import statespace
 import motionplanning
 import logResults
+
 
 difficulty="Easy" #Easy, Medium, Hard, Extreme, Random
 

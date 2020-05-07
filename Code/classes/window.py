@@ -9,7 +9,7 @@ import pickle
 
 # Import our own functions
 from trigfunctions import*
-from classes.car_class import car
+from car import car
 
 class Window():
     def __init__(self,game,WorldSize_px):

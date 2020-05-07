@@ -125,7 +125,7 @@ class car(pygame.sprite.Sprite):
 
 
     def turnCar(self,wheel_angle):
-        print("Turning")
+        # print("Turning")
         if wheel_angle != 0:
             R=math.sqrt(self.a2**2+self.l**2*cotd(wheel_angle)**2)
             # if wheel_angle<0:
@@ -170,7 +170,7 @@ class car(pygame.sprite.Sprite):
         # self.theta=self.theta % 360
 
         print(self.x,self.y,self.theta)
-        print("\n\n")
+        # print("\n\n")
 
         self.updateSpriteOrigin()
         # self.car,self.rect=self.rot_center(self.theta)

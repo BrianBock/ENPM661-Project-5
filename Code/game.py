@@ -12,7 +12,7 @@ import logResults
 
 
 manuallyAddCars=False
-gameMode="Medium" #Easy, Medium, Hard, Extreme, Random
+gameMode="Hard" #Easy, Medium, Hard, Extreme, Random
 photoMode=False
 
 if manuallyAddCars == True:
@@ -74,24 +74,10 @@ changelaneright=False
 while game.run:
     game.clock.tick(50)
 
-    # If there are no blue cars, make some more
-    # print(len(obst_list))
-    # if len(game.obst_list)<3:
-    #     for i in range(0,random.randint(3,10)):
-    #         game.obst_list=game.generateRandomObstacle()
-
-    # for obstacle in game.obst_list:
-    #     if obstacle.spritex < obstacle.car_width_px * -1: # If our obstacle is off the screen we will remove it
-    #         print(obstacle.spritex)
-    #         obstacle.kill()
-            # obst_list=game.generateRandomObstacle() # create a new obstacle to replace it
 
     for active_car in game.active_list:
         active_car.spritex+=active_car.vel
         active_car.updateCarOrigin()
-        # if active_car.spritex < active_car.car_width_px * -1: # If our obstacle is off the screen we will remove it
-        #     game.active_list.pop(game.active_list.index(game.active_car))
-
 
 
     for event in pygame.event.get():
@@ -105,15 +91,12 @@ while game.run:
     if keys[pygame.K_LEFT]:
         if not changelaneleft:
             start_time=t
-            # game.orange_car.turnCar(5)
             changelaneleft=True
-            direction=1
 
     if changelaneleft:
         if t-start_time<=1000:
             game.orange_car.turnCar(15)  
         elif game.orange_car.theta >0:
-        # t-start_time<=1000:
             game.orange_car.turnCar(-15)  
         else:
             changelaneleft=False
@@ -122,7 +105,6 @@ while game.run:
     if keys[pygame.K_RIGHT]:
         if not changelaneright:
             start_time=t
-            # game.orange_car.turnCar(5)
             changelaneright=True
             direction=1
 
@@ -130,43 +112,28 @@ while game.run:
         if t-start_time<=1000:
             game.orange_car.turnCar(-15)  
         elif game.orange_car.theta <0:
-        # t-start_time<=1000:
             game.orange_car.turnCar(15)  
         else:
             changelaneright=False
 
-    if not changelaneright or not changelaneleft:
+    if not changelaneright and not changelaneleft:
         game.orange_car.turnCar(0)
-    # elif keys[pygame.K_RIGHT]:
-    #     game.orange_car.turnCar(-15)
-    # world.moveWindow(keys,game)
-    # game.orange_car.moveCar(keys,(game.canvas_width,game.canvas_height))
+
     
 
     if manuallyAddCars:
     # Get cursor position for placing blue cars
         cursor=pygame.mouse.get_pos()
         click=pygame.mouse.get_pressed()
-        # print(click)
         if click[0]==1:
             window_pos=(world.window.x,world.window.y)
             cursor_pos=(cursor[0]+window_pos[0],cursor[1]+window_pos[1])
-            # print(cursor_pos)
             new_obst=car(cursor_pos[0],cursor_pos[1],"obstacle")
             game.obst_list.add(new_obst)
             game.all_sprites.add(new_obst)
             bluecarlist.append(cursor_pos)
-    
-
-    # if game.orange_car.spritex<world.window.finish_line:
-    #     game.orange_car.turnCar(0)
 
 
-        print(game.orange_car.spritex,game.orange_car.spritey,game.orange_car.theta)
-
-    # if 750<=game.orange_car.spritex<=800:
-    #     print("turn?")
-    #     game.orange_car.turnCar(-35)
     world.updateWinPos(game)
     world.window.redrawGameWindow(game,world.WorldSize_px) 
         

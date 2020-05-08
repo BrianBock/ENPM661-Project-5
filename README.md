@@ -23,14 +23,14 @@ The program will solve a path from the start to goal. A matplotlib based visuali
 
 
 ## Difficulty Modes
-The program has several difficulty modes, which can be selected by changing the value of `gameMode` in `game.py`. 
+The program has several difficulty modes, which can be selected by changing the value of `gameMode` in `game.py`. At this time, only Easy mode has been fully tested. The harder worlds were built before non-holonomic motion was incorporated, and may therefore only be solveable with a holonomic vehicle. 
 
 
 
 ### Easy
-Easy mode features a very short road and few obstacles. 
+Easy mode features a length of road and a handful of obstacles. The image below was split onto two lines for easier viewing. 
 
-![Easy Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/Easy1.png)
+![Easy Mode](https://github.com/BrianBock/ENPM661-Project-5/blob/master/Report/course_split2.png)
 
 
 

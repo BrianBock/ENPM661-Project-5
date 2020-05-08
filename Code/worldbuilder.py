@@ -23,7 +23,7 @@ difficulty = "Easy" #Easy, Medium, Hard, Extreme, Random
 road_length = 170 #meters, converted to pix by *30
 
 
-needCheck=False
+needCheck=True
 print("This is a building mode designed for picking the locations of the blue cars")
 while needCheck:
     check=input("This mode will overwrite any previously saved blue car positions for difficulty: '"+difficulty+"'. Are you sure you want to continue? Type 'Yes' or 'No': ")

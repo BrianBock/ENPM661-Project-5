@@ -5,17 +5,16 @@ from time import time
 import math
 import random
 import sys
-sys.path.append("classes/")
 
 # Import our own functions
+sys.path.append('Game/')
+sys.path.append('MotionPlanning/')
 from car import car
 from window import Window
 from world import World
 from game import car_game
 import statespace
-import motionplanning
-import logResults
-
+import motionplanner
 
 difficulty = "Easy" #Easy, Medium, Hard, Extreme, Random
 

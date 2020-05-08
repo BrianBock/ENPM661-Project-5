@@ -6,17 +6,16 @@ import math
 import random
 import os
 import sys
-sys.path.append('classes/')
 
 # Import our own functions
+sys.path.append('Game/')
+sys.path.append('MotionPlanning/')
 from car import car
 from window import Window
 from world import World
 from game import car_game
 import statespace
-import motionplanning
-import logResults
-
+import motionplanner
 
 
 difficulty = "Easy" #Easy, Medium, Hard, Extreme, Random
@@ -124,3 +123,4 @@ with open(car_pos_path,'wb') as filehandle:
     print("Data saved")
 with open(length_path,'wb') as filehandle:
     pickle.dump(road_length,filehandle)
+    

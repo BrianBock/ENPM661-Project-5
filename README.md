@@ -2,6 +2,10 @@
 This project implements RRT motion planning for a car (non-holonomic robot) with steering as the only control input.  
 A\*, Dijkstra, BFS and DFS planners are also supported.
 
+<p align="center">
+  <img src="https://github.com/BrianBock/ENPM661-Project-5/blob/master/demo/demo.gif?raw=true">
+</p>
+
 ## How to Run
 Clone this entire repository. Make sure the directory you clone it to is one you have write access to, as several files are created while the program runs. Open Terminal and navigate to the Code directory. Type `python autopilot.py`. If you have additional versions of Python installed, you may need to type `python3 autopilot.py` instead. 
 
